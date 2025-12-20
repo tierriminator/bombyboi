@@ -1,5 +1,7 @@
 extends Node
 
+class_name Map
+
 var spawnpoints = {
 	1: Vector2i(1,1),
 	2: Vector2i(18,8)
@@ -104,24 +106,40 @@ func collides(tile: Vector2i) -> bool:
 	var tile_data = terrain.get_cell_tile_data(tile)
 	return tile_data.get_custom_data("has_collision") or has_bomb(tile)
 	
-func get_bombs() -> Array[Node]:
-	return get_tree().get_nodes_in_group("bombs")
+func get_bombs() -> Array[Bomb]:
+	var bombs: Array[Bomb] = []
+	bombs.assign(get_tree().get_nodes_in_group("bombs"))
+	return bombs
 	
 func has_bomb(tile: Vector2i) -> bool:
 	for bomb in get_bombs():
-		if terrain.local_to_map(bomb.position) == tile:
+		if bombas.local_to_map(bomb.position) == tile:
 			return true
 	return false
 	
-func spawn_bomb(tile: Vector2i, player_id: int, explosion_range: int) -> void:
+func spawn_bomb(tile: Vector2i, player: Player) -> void:
 	if has_bomb(tile):
 		return
 	var target_pos = terrain.map_to_local(tile)
-	var bomb = bomb_scene.instantiate()
+	var bomb: Bomb = bomb_scene.instantiate()
 	bomb.position = target_pos
-	bomb.player_id = player_id
-	bomb.explosion_range = explosion_range
+	bomb.player_id = player.player_id
+	bomb.explosion_range = player.bomb_range
 	bombas.add_child(bomb)
+	
+func get_energies() -> Array[Energy]:
+	var energies: Array[Energy] = []
+	energies.assign(get_tree().get_nodes_in_group("energies"))
+	return energies
+	
+func find_energy(tile: Vector2i) -> Energy:
+	for energy in get_energies():
+		if bombas.local_to_map(energy.position) == tile:
+			return energy
+	return null
+	
+func has_energy(tile: Vector2i) -> bool:
+	return find_energy(tile) == null
 
 func spawn_energy(tile: Vector2i) -> void:
 	var energy = energy_scene.instantiate()

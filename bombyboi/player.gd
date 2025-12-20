@@ -25,15 +25,26 @@ signal damage(new_lives)
 var lives = Main.starting_lives:
 	set(value):
 		if value < lives:
-			do_hit_animation()
-		lives = value
-		damage.emit(lives)
-		if lives <= 0:
-			$Sprite2D.flip_v = true
+			lives = value
+			damage.emit(lives)
+			if lives > 0:
+				hurt()
+			else:
+				die()
 
+func hurt() -> void:
+	$sounds/damage.play()
+	do_hit_animation()
+	
 func do_hit_animation() -> void:
 	var tween = create_tween()
 	tween.tween_property($Sprite2D, "rotation", TAU, 0.3).from(0.0)
+
+func die() -> void:
+	var tween = create_tween()
+	tween.tween_property($Sprite2D, "scale", Vector2(1.5, 0.0), 0.3)
+	tween.tween_property($Sprite2D, "scale", Vector2(0.0, 0.0), 0.2)
+	queue_free()
 
 func _init() -> void:
 	add_to_group("players")
@@ -87,6 +98,7 @@ func consume_energy(tile: Vector2i) -> void:
 				bomb_range += 1
 			Main.EnergyType.PINK:
 				max_bombs += 1
+		map.get_node("sounds/glugg").play()
 		energy.queue_free()
 		
 func maybe_place_bomb(map_position: Vector2i) -> void:

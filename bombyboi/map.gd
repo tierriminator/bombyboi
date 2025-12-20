@@ -48,9 +48,9 @@ func get_type(pos: Vector2i) -> int:
 	return terrain.get_cell_atlas_coords(pos).y
 
 func set_area(pos: Vector2i, size: Vector2i, type: int) -> void:
-		for x in size.x:
-			for y in size.y:
-				set_tile(pos + Vector2i(x, y), type)
+	for x in size.x:
+		for y in size.y:
+			set_tile(pos + Vector2i(x, y), type)
 	
 func set_tile(pos: Vector2i, type: int) -> void:
 	#print("set {0} {1} to {2}".format([str(pos.x), str(pos.y), str(type)]))
@@ -58,20 +58,32 @@ func set_tile(pos: Vector2i, type: int) -> void:
 	
 func place_players(players: int) -> void:
 	for player in players:
-		create_player(player)
+		var pos = get_random_spawn()
+		create_player(player, pos)
+		set_area(pos - Vector2i(0, 1), Vector2i(1, 3), 1)
+		set_area(pos - Vector2i(1, 0), Vector2i(3, 1), 1)
 		
-func create_player(player: int) -> void:
+func create_player(player: int, pos: Vector2i) -> void:
 	var psc = player_scene.instantiate()
 	psc.player_id = player + 1
 	psc.get_node("Sprite2D").texture = faces[player]
-	psc.set_position(terrain.map_to_local(get_random_spawn()))
+	psc.set_position(terrain.map_to_local(pos))
 	add_child(psc)
 		
 func get_random_spawn() -> Vector2i:
-	var pos = Vector2i(randi_range(1, 18), randi_range(1, 8))
-	while (get_type(pos) == 1):
-		pos = Vector2i(randi_range(1, 18), randi_range(1, 8))
+	var x_start = 2
+	var y_start = 2
+	var x_end = 17
+	var y_end = 7
+	var pos = Vector2i(randi_range(x_start, x_end), randi_range(y_start, y_end))
+	while (get_type(pos) == 0 and has_player(pos)):
+		pos = Vector2i(randi_range(x_start, x_end), randi_range(y_start, y_end))
 	return pos
+	
+func has_player(pos: Vector2i) -> bool:
+	for player in get_tree().get_nodes_in_group("players"):
+		return terrain.local_to_map(player.position) == pos
+	return false
 
 # Called every frame. 'delta' is the elapsed time since the previous frame.
 func _process(delta: float) -> void:

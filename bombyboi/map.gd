@@ -5,6 +5,12 @@ var spawnpoints = {
 	2: Vector2i(18,8)
 }
 
+var faces = {
+	1: preload("res://Art/tierry.png"),
+	2: preload("res://Art/linus.png"),
+	3: preload("res://Art/micha.png")
+}
+
 var player_count = spawnpoints.size()
 
 @onready var terrain := get_node("/root/Map/Terrain")
@@ -19,6 +25,7 @@ func _ready() -> void:
 		var psc = player_scene.instantiate()
 		psc.set_position(terrain.map_to_local(spawnpoints[player]))
 		psc.player_id = player
+		psc.get_node("Sprite2D").texture = faces[player]
 		add_child(psc)
 	pass # Replace with function body.
 

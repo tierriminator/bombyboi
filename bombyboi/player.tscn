@@ -1,7 +1,6 @@
-[gd_scene load_steps=4 format=3 uid="uid://cxlf3jyrexxho"]
+[gd_scene load_steps=3 format=3 uid="uid://cxlf3jyrexxho"]
 
 [ext_resource type="Script" uid="uid://cc7bx8p3went2" path="res://player.gd" id="1_onrkg"]
-[ext_resource type="Texture2D" uid="uid://bhynom3shaor2" path="res://Art/tierry.png" id="2_onrkg"]
 
 [sub_resource type="RectangleShape2D" id="RectangleShape2D_sh265"]
 size = Vector2(60, 60)
@@ -15,6 +14,3 @@ script = ExtResource("1_onrkg")
 shape = SubResource("RectangleShape2D_sh265")
 
 [node name="Sprite2D" type="Sprite2D" parent="."]
-position = Vector2(-1.4305115e-06, -4.7683716e-07)
-scale = Vector2(0.93749994, 0.9375)
-texture = ExtResource("2_onrkg")

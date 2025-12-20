@@ -1,9 +1,10 @@
-[gd_scene load_steps=7 format=3 uid="uid://b3cuh18ivrsct"]
+[gd_scene load_steps=8 format=3 uid="uid://b3cuh18ivrsct"]
 
 [ext_resource type="Script" uid="uid://dei14lt0hb2wp" path="res://hud.gd" id="1_37p78"]
-[ext_resource type="Script" uid="uid://dsvdf62lfg1o8" path="res://p_1_lives.gd" id="2_64ctp"]
-[ext_resource type="Script" uid="uid://cigscdcfny7cp" path="res://p_2_lives.gd" id="3_640wx"]
-[ext_resource type="Script" uid="uid://b3dr0t3xxrf5g" path="res://p_3_lives.gd" id="4_a2258"]
+[ext_resource type="Script" uid="uid://cspci3wmjae43" path="res://hud_p_1.gd" id="3_1xsix"]
+[ext_resource type="Texture2D" uid="uid://l661fn8cbrfd" path="res://Art/heart.png" id="3_a2258"]
+[ext_resource type="Script" uid="uid://xan8o8m2pkyf" path="res://hud_p_2.gd" id="4_rftc2"]
+[ext_resource type="Script" uid="uid://b2fo1h3x655d6" path="res://hud_p_3.gd" id="5_61f8s"]
 
 [sub_resource type="LabelSettings" id="LabelSettings_n2snw"]
 font_size = 32
@@ -14,32 +15,47 @@ font_size = 32
 [node name="Hud" type="CanvasLayer"]
 layer = 3
 script = ExtResource("1_37p78")
+lives_png = ExtResource("3_a2258")
 
-[node name="p1_lives" type="Label" parent="."]
-offset_right = 40.0
-offset_bottom = 23.0
-text = "Player 1: X Lives"
+[node name="Left" type="Control" parent="."]
+custom_minimum_size = Vector2(128, 0)
+layout_mode = 3
+anchors_preset = 9
+anchor_bottom = 1.0
+grow_vertical = 2
+
+[node name="Hud_p1" type="HBoxContainer" parent="."]
+custom_minimum_size = Vector2(512, 45)
+script = ExtResource("3_1xsix")
+
+[node name="p1_lives" type="Label" parent="Hud_p1"]
+layout_mode = 2
+text = "Player 1"
 label_settings = SubResource("LabelSettings_n2snw")
-script = ExtResource("2_64ctp")
 
-[node name="p2_lives" type="Label" parent="."]
-anchors_preset = 1
-anchor_left = 1.0
-anchor_right = 1.0
-offset_left = -123.0
-offset_bottom = 23.0
-grow_horizontal = 0
-text = "Player 2: X Lives"
+[node name="Hud_p2" type="HBoxContainer" parent="."]
+custom_minimum_size = Vector2(512, 45)
+layout_direction = 3
+offset_right = 512.0
+offset_bottom = 45.0
+script = ExtResource("4_rftc2")
+
+[node name="p2_lives" type="Label" parent="Hud_p2"]
+layout_mode = 2
+text = "Player 2"
 label_settings = SubResource("LabelSettings_37p78")
-script = ExtResource("3_640wx")
 
-[node name="p3_lives" type="Label" parent="."]
+[node name="Hud_p3" type="HBoxContainer" parent="."]
+custom_minimum_size = Vector2(512, 45)
 anchors_preset = 2
 anchor_top = 1.0
 anchor_bottom = 1.0
-offset_top = -23.0
-offset_right = 40.0
+offset_top = -45.0
+offset_right = 256.0
 grow_vertical = 0
-text = "Player 3: X Lives"
+script = ExtResource("5_61f8s")
+
+[node name="p3_lives" type="Label" parent="Hud_p3"]
+layout_mode = 2
+text = "Player 3"
 label_settings = SubResource("LabelSettings_37p78")
-script = ExtResource("4_a2258")

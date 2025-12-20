@@ -36,7 +36,7 @@ func _init() -> void:
 	add_to_group("players")
 	
 func _ready() -> void:
-	get_node("/root/Map/Hud/p%d_lives" %player_id).register_player(self)
+	get_node("/root/Map/Hud/Hud_p%d" %player_id).register_player(self)
 
 func _physics_process(delta: float) -> void:
 	var map_position = terrain.local_to_map(position)

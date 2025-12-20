@@ -1,4 +1,4 @@
-[gd_scene load_steps=14 format=4 uid="uid://bnjvx3l80rsq1"]
+[gd_scene load_steps=15 format=4 uid="uid://bnjvx3l80rsq1"]
 
 [ext_resource type="Texture2D" uid="uid://dowvnmlh8syiv" path="res://Art/Basic_Tiles.png" id="1_c7s6e"]
 [ext_resource type="Script" uid="uid://dvynds7hjrh4m" path="res://map.gd" id="1_p5pve"]
@@ -7,6 +7,7 @@
 [ext_resource type="PackedScene" uid="uid://b3cuh18ivrsct" path="res://hud.tscn" id="3_iw27f"]
 [ext_resource type="PackedScene" uid="uid://cvknoetih88aq" path="res://energy.tscn" id="4_71pa8"]
 [ext_resource type="PackedScene" uid="uid://ufobg6dkpl5f" path="res://bomb.tscn" id="4_p5pve"]
+[ext_resource type="AudioStream" uid="uid://dsni4utuw5c2i" path="res://Sounds/soundtrack.wav" id="8_05x41"]
 
 [sub_resource type="TileSetAtlasSource" id="TileSetAtlasSource_wijl4"]
 texture = ExtResource("1_c7s6e")
@@ -70,3 +71,6 @@ tile_set = SubResource("TileSet_p5pve")
 
 [node name="Players" type="TileMapLayer" parent="."]
 tile_set = SubResource("TileSet_iw27f")
+
+[node name="soundtrack" type="AudioStreamPlayer" parent="."]
+stream = ExtResource("8_05x41")

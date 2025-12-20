@@ -39,6 +39,7 @@ var pink_energy_p = 0.5
 func _ready() -> void:
 	create_map()
 	place_players(2)
+	$soundtrack.play()
 		
 func create_map() -> void:
 	for n in 20:

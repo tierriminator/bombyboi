@@ -1,5 +1,7 @@
 extends StaticBody2D
 
+class_name Bomb
+
 var explosion_texture: Texture2D = preload("res://Art/explosion.png")
 var live_seconds = 2.0
 var explosion_seconds = 0.5

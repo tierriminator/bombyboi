@@ -16,7 +16,7 @@ var player_id: int
 var max_bombs = 1
 var bomb_range = 1
 
-var lives = 3:
+var lives = Main.starting_lives:
 	set(value):
 		if value < lives:
 			do_hit_animation()

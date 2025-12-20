@@ -1,6 +1,7 @@
 extends Node
 
 var player_count: int
+var starting_lives: int
 
 
 # Called when the node enters the scene tree for the first time.

@@ -30,7 +30,6 @@ func _on_explode() -> void:
 	$Timer.start()
 
 func get_explosion_tiles() -> Array[Vector2i]:
-	var terrain = get_node("/root/Map/Terrain")
 	var bomb_tile = terrain.local_to_map(position)
 	var tiles: Array[Vector2i] = [bomb_tile]
 	var directions = [

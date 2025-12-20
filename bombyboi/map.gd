@@ -1,5 +1,7 @@
 extends Node
 
+class_name Map
+
 var spawnpoints = {
 	1: Vector2i(1,1),
 	2: Vector2i(18,8)
@@ -104,8 +106,10 @@ func collides(tile: Vector2i) -> bool:
 	var tile_data = terrain.get_cell_tile_data(tile)
 	return tile_data.get_custom_data("has_collision") or has_bomb(tile)
 	
-func get_bombs() -> Array[Node]:
-	return get_tree().get_nodes_in_group("bombs")
+func get_bombs() -> Array[Bomb]:
+	var bombs: Array[Bomb] = []
+	bombs.assign(get_tree().get_nodes_in_group("bombs"))
+	return bombs
 	
 func has_bomb(tile: Vector2i) -> bool:
 	for bomb in get_bombs():

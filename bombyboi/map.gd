@@ -1,5 +1,9 @@
 extends Node
 
+var spawnpoints = {
+	1: Vector2i(1,1),
+	2: Vector2i(18,8)
+}
 
 var faces = [
 	preload("res://Art/tierry.png"),
@@ -15,23 +19,25 @@ var walls = [
 	Vector2i(1, 4)
 ]
 
-var player_count: int
+var player_count = spawnpoints.size()
+
+var pink_energy_p = 0.5
 
 @onready var terrain := get_node("/root/Map/Terrain")
+@onready var bombas := get_node("/root/Map/Bombas")
 @onready var player_layer := get_node("/root/Map/Players")
 
 @export var player_scene: PackedScene
+@export var bomb_scene: PackedScene
+@export var energy_scene: PackedScene
 
 
-#func setup(player_count: int) -> void:
-	#create_map()
-	#place_players(Main.player_count)
 
- #Called when the node enters the scene tree for the first time.
+# Called when the node enters the scene tree for the first time.
 func _ready() -> void:
 	create_map()
-	place_players(Main.player_count)
-	
+	place_players(2)
+		
 func create_map() -> void:
 	for n in 20:
 		var segment = walls.pick_random()
@@ -94,12 +100,36 @@ func get_random_player_id() -> int:
 		id = (id + 1) % 3
 	return id
 	
+func has_bomb(tile: Vector2i) -> bool:
+	for bomb in get_tree().get_nodes_in_group("bombs"):
+		if terrain.local_to_map(bomb.position) == tile:
+			return true
+	return false
+	
+func spawn_bomb(tile: Vector2i, player_id: int, range: int) -> void:
+	if has_bomb(tile):
+		return
+	var target_pos = terrain.map_to_local(tile)
+	var bomb = bomb_scene.instantiate()
+	bomb.position = target_pos
+	bomb.player_id = player_id
+	bomb.explosion_range = range
+	bombas.add_child(bomb)
+
+func spawn_energy(tile: Vector2i) -> void:
+	var energy = energy_scene.instantiate()
+	if randf() > pink_energy_p:
+		energy.type = Main.EnergyType.GREEN
+	else:
+		energy.type = Main.EnergyType.PINK
+	energy.position = bombas.map_to_local(tile)
+	bombas.add_child(energy)
+	
 func player_exists(id: int) -> bool:
 	for player in get_tree().get_nodes_in_group("players"):
 		if (player.player_id == id):
 			return true
 	return false
-
 # Called every frame. 'delta' is the elapsed time since the previous frame.
 func _process(delta: float) -> void:
 	pass

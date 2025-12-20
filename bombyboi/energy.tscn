@@ -1,23 +1,12 @@
 [gd_scene load_steps=3 format=3 uid="uid://cvknoetih88aq"]
 
-[sub_resource type="GDScript" id="GDScript_cd8iu"]
-script/source = "extends StaticBody2D
-
-# Called when the node enters the scene tree for the first time.
-func _ready() -> void:
-	pass # Replace with function body.
-
-
-# Called every frame. 'delta' is the elapsed time since the previous frame.
-func _process(delta: float) -> void:
-	pass
-"
+[ext_resource type="Script" uid="uid://sdscloo2ajbf" path="res://energy.gd" id="1_ql0ev"]
 
 [sub_resource type="RectangleShape2D" id="RectangleShape2D_cd8iu"]
 size = Vector2(64, 64)
 
 [node name="StaticBody2D" type="StaticBody2D"]
-script = SubResource("GDScript_cd8iu")
+script = ExtResource("1_ql0ev")
 
 [node name="Sprite2D" type="Sprite2D" parent="."]
 

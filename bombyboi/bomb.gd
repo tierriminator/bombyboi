@@ -5,6 +5,7 @@ var bomb_live_seconds = 2.0
 var explosion_seconds = 0.5
 var explosion_range = 3
 var explosion_sprites: Array[Sprite2D] = []
+var player_id: int
 
 func _ready() -> void:
 	add_to_group("bombs")

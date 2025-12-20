@@ -53,10 +53,17 @@ func move(map_position: Vector2i) -> void:
 		set_position(target_pos)
 		
 func maybe_place_bomb(map_position: Vector2i) -> void:
-	if Input.is_action_just_pressed(place_bomb):
+	if Input.is_action_just_pressed(place_bomb) and not has_bombs():
 		var target_pos = terrainmap_path.map_to_local(map_position)
 		if check_bomb(target_pos):
 			return
 		var bomb = bomb_scene.instantiate()
 		bomb.position = target_pos
+		bomb.player_id = player_id
 		get_parent().add_child(bomb)
+		
+func has_bombs() -> bool:
+	for bomb in get_tree().get_nodes_in_group("bombs"):
+		if bomb.player_id == player_id:
+			return true
+	return false

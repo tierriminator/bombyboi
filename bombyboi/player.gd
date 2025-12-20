@@ -1,5 +1,7 @@
 extends CharacterBody2D
 
+var bomb_scene: PackedScene = preload("res://bomb.tscn")
+
 var map_position: Vector2i
 
 var player_id: int
@@ -8,6 +10,7 @@ var player_id: int
 @onready var movedown = "p%d_move_down" % player_id
 @onready var moveright = "p%d_move_right" % player_id
 @onready var moveleft = "p%d_move_left" % player_id
+@onready var place_bomb = "p%d_place_bomb" % player_id
 
 @onready var terrainmap_path := get_node("/root/Map/Terrain")
 
@@ -31,4 +34,8 @@ func _physics_process(delta: float) -> void:
 	movedir = map_position + movedir
 	if check_terrain(movedir).get_collision_polygons_count(0) == 0:
 		set_position(terrainmap_path.map_to_local(movedir))
-	#move_and_slide()
+
+	if Input.is_action_just_pressed(place_bomb):
+		var bomb = bomb_scene.instantiate()
+		bomb.position = terrainmap_path.map_to_local(map_position)
+		get_parent().add_child(bomb)

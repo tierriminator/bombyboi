@@ -3,6 +3,8 @@ extends Node
 var player_count: int
 var starting_lives: int
 
+var ENERGY_SPAWN_P = 0.5
+
 enum EnergyType { GREEN, PINK }
 
 # Called when the node enters the scene tree for the first time.

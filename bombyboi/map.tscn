@@ -1,10 +1,11 @@
-[gd_scene load_steps=13 format=4 uid="uid://bnjvx3l80rsq1"]
+[gd_scene load_steps=14 format=4 uid="uid://bnjvx3l80rsq1"]
 
 [ext_resource type="Texture2D" uid="uid://dowvnmlh8syiv" path="res://Art/Basic_Tiles.png" id="1_c7s6e"]
 [ext_resource type="Script" uid="uid://dvynds7hjrh4m" path="res://map.gd" id="1_p5pve"]
 [ext_resource type="Texture2D" uid="uid://c7h4wmoxmhybv" path="res://Art/tiles.png" id="2_e0an3"]
 [ext_resource type="PackedScene" uid="uid://cxlf3jyrexxho" path="res://player.tscn" id="2_wijl4"]
 [ext_resource type="PackedScene" uid="uid://b3cuh18ivrsct" path="res://hud.tscn" id="3_iw27f"]
+[ext_resource type="PackedScene" uid="uid://cvknoetih88aq" path="res://energy.tscn" id="4_71pa8"]
 [ext_resource type="PackedScene" uid="uid://ufobg6dkpl5f" path="res://bomb.tscn" id="4_p5pve"]
 
 [sub_resource type="TileSetAtlasSource" id="TileSetAtlasSource_wijl4"]
@@ -54,6 +55,8 @@ tile_size = Vector2i(64, 64)
 [node name="Map" type="Node"]
 script = ExtResource("1_p5pve")
 player_scene = ExtResource("2_wijl4")
+bomb_scene = ExtResource("4_p5pve")
+energy_scene = ExtResource("4_71pa8")
 
 [node name="Hud" parent="." instance=ExtResource("3_iw27f")]
 

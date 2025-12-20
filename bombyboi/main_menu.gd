@@ -7,6 +7,7 @@ func _ready() -> void:
 
 func _on_new_game_pressed() -> void:
 	Main.player_count = $MenuCenter/PlayerCount.get_selected_id() + 1
+	Main.remaining_player_count = $MenuCenter/PlayerCount.get_selected_id() + 1
 	Main.starting_lives = $MenuCenter/StartingLives.get_selected_id() + 1
 	load_map(first_map.resource_path)
 

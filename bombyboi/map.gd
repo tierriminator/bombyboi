@@ -60,7 +60,7 @@ func set_tile(pos: Vector2i, type: int) -> void:
 func place_players(players: int) -> void:
 	for player in players:
 		var pos = get_random_spawn()
-		create_player(player, pos)
+		create_player(get_random_player_id(), pos)
 		set_area(pos - Vector2i(0, 1), Vector2i(1, 3), 1)
 		set_area(pos - Vector2i(1, 0), Vector2i(3, 1), 1)
 		
@@ -84,6 +84,18 @@ func get_random_spawn() -> Vector2i:
 func has_player(pos: Vector2i) -> bool:
 	for player in get_tree().get_nodes_in_group("players"):
 		return terrain.local_to_map(player.position) == pos
+	return false
+	
+func get_random_player_id() -> int:
+	var id = randi_range(0, 2)
+	while player_exists(id + 1):
+		id = (id + 1) % 3
+	return id
+	
+func player_exists(id: int) -> bool:
+	for player in get_tree().get_nodes_in_group("players"):
+		if (player.player_id == id):
+			return true
 	return false
 
 # Called every frame. 'delta' is the elapsed time since the previous frame.

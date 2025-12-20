@@ -150,7 +150,7 @@ autostart = true
 
 [node name="AudioStreamPlayer" type="AudioStreamPlayer" parent="."]
 stream = ExtResource("9_dy7ct")
-volume_db = -2.055
+volume_db = -7.0
 
 [connection signal="pressed" from="MenuCenter/NewGame" to="." method="_on_new_game_pressed"]
 [connection signal="timeout" from="p1/Timer" to="p1" method="_on_timer_timeout"]

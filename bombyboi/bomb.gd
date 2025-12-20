@@ -7,6 +7,8 @@ var explosion_range = 3
 var explosion_sprites: Array[Sprite2D] = []
 var player_id: int
 
+@onready var terrain = get_node("/root/Map/Terrain")
+
 func _ready() -> void:
 	add_to_group("bombs")
 	$Timer.wait_time = live_seconds
@@ -49,7 +51,6 @@ func get_explosion_tiles() -> Array[Vector2i]:
 	return tiles
 
 func spawn_explosion_sprites(tiles: Array[Vector2i]) -> void:
-	var terrain = get_node("/root/Map/Terrain")
 	for tile in tiles:
 		if tile == terrain.local_to_map(position):
 			continue

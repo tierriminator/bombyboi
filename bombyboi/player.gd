@@ -60,7 +60,7 @@ func move(map_position: Vector2i) -> void:
 	if not map.collides(movedir):
 		var target_pos = terrain.map_to_local(movedir)
 		set_position(target_pos)
-		consume_energy(target_pos)
+		consume_energy(movedir)
 		
 func consume_energy(tile: Vector2i) -> void:
 	var energy = map.find_energy(tile)

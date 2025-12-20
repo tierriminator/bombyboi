@@ -82,7 +82,7 @@ tile_set = SubResource("TileSet_iw27f")
 
 [node name="soundtrack" type="AudioStreamPlayer" parent="."]
 stream = ExtResource("8_05x41")
-volume_db = -0.5
+volume_db = -5.0
 
 [node name="sounds" type="Node2D" parent="."]
 

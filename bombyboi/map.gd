@@ -125,6 +125,7 @@ func spawn_bomb(tile: Vector2i, player: Player) -> void:
 	bomb.player_id = player.player_id
 	bomb.explosion_range = player.bomb_range
 	bombas.add_child(bomb)
+	$sounds/place_bomb.play()
 	
 func get_energies() -> Array[Energy]:
 	var energies: Array[Energy] = []

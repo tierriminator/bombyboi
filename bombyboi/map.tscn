@@ -1,4 +1,4 @@
-[gd_scene load_steps=15 format=4 uid="uid://bnjvx3l80rsq1"]
+[gd_scene load_steps=23 format=4 uid="uid://bnjvx3l80rsq1"]
 
 [ext_resource type="Texture2D" uid="uid://dowvnmlh8syiv" path="res://Art/Basic_Tiles.png" id="1_c7s6e"]
 [ext_resource type="Script" uid="uid://dvynds7hjrh4m" path="res://map.gd" id="1_p5pve"]
@@ -7,7 +7,15 @@
 [ext_resource type="PackedScene" uid="uid://b3cuh18ivrsct" path="res://hud.tscn" id="3_iw27f"]
 [ext_resource type="PackedScene" uid="uid://cvknoetih88aq" path="res://energy.tscn" id="4_71pa8"]
 [ext_resource type="PackedScene" uid="uid://ufobg6dkpl5f" path="res://bomb.tscn" id="4_p5pve"]
-[ext_resource type="AudioStream" uid="uid://dsni4utuw5c2i" path="res://Sounds/soundtrack.wav" id="8_05x41"]
+[ext_resource type="AudioStream" uid="uid://c52hij84wbdkc" path="res://Sounds/soundtrack.wav" id="8_05x41"]
+[ext_resource type="AudioStream" uid="uid://cwugvycb5wb8r" path="res://Sounds/die.wav" id="9_wbpbn"]
+[ext_resource type="AudioStream" uid="uid://cduv158xvdop5" path="res://Sounds/damage.wav" id="10_a6rn7"]
+[ext_resource type="AudioStream" uid="uid://cfcvn4awitwsb" path="res://Sounds/bamm.wav" id="11_4on3e"]
+[ext_resource type="AudioStream" uid="uid://xji6yiplahm8" path="res://Sounds/walk.wav" id="12_bssq0"]
+[ext_resource type="AudioStream" uid="uid://7ad4302tjcch" path="res://Sounds/wall.wav" id="13_jk4ss"]
+[ext_resource type="AudioStream" uid="uid://db442rwrvw1kp" path="res://Sounds/glugg.wav" id="14_r5om4"]
+[ext_resource type="AudioStream" uid="uid://blk5ka74mq0i4" path="res://Sounds/place_bomb.wav" id="15_jky6x"]
+[ext_resource type="AudioStream" uid="uid://dawm8ei0u8pki" path="res://Sounds/bombe_in_flesche.wav" id="16_4sf5t"]
 
 [sub_resource type="TileSetAtlasSource" id="TileSetAtlasSource_wijl4"]
 texture = ExtResource("1_c7s6e")
@@ -74,3 +82,29 @@ tile_set = SubResource("TileSet_iw27f")
 
 [node name="soundtrack" type="AudioStreamPlayer" parent="."]
 stream = ExtResource("8_05x41")
+
+[node name="sounds" type="Node2D" parent="."]
+
+[node name="die" type="AudioStreamPlayer" parent="sounds"]
+stream = ExtResource("9_wbpbn")
+
+[node name="damage" type="AudioStreamPlayer" parent="sounds"]
+stream = ExtResource("10_a6rn7")
+
+[node name="bamm" type="AudioStreamPlayer" parent="sounds"]
+stream = ExtResource("11_4on3e")
+
+[node name="walk" type="AudioStreamPlayer" parent="sounds"]
+stream = ExtResource("12_bssq0")
+
+[node name="wall" type="AudioStreamPlayer" parent="sounds"]
+stream = ExtResource("13_jk4ss")
+
+[node name="glugg" type="AudioStreamPlayer" parent="sounds"]
+stream = ExtResource("14_r5om4")
+
+[node name="place_bomb" type="AudioStreamPlayer" parent="sounds"]
+stream = ExtResource("15_jky6x")
+
+[node name="bombe_in_flesche" type="AudioStreamPlayer" parent="sounds"]
+stream = ExtResource("16_4sf5t")

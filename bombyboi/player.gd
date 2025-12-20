@@ -33,7 +33,7 @@ var lives = Main.starting_lives:
 				die()
 
 func hurt() -> void:
-	$sounds/damage.play()
+	map.get_node("sounds/damage").play()
 	do_hit_animation()
 	
 func do_hit_animation() -> void:
@@ -41,6 +41,7 @@ func do_hit_animation() -> void:
 	tween.tween_property($Sprite2D, "rotation", TAU, 0.3).from(0.0)
 
 func die() -> void:
+	map.get_node("sounds/die").play()
 	var tween = create_tween()
 	tween.tween_property($Sprite2D, "scale", Vector2(1.5, 0.0), 0.3)
 	tween.tween_property($Sprite2D, "scale", Vector2(0.0, 0.0), 0.2)

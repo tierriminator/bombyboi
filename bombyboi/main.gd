@@ -8,6 +8,8 @@ var PINK_ENERGY_P = 0.2
 
 enum EnergyType { GREEN, PINK }
 
+enum Orientation { UP, DOWN, RIGHT, LEFT }
+
 # Called when the node enters the scene tree for the first time.
 func _ready() -> void:
 	pass # Replace with function body.

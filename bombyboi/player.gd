@@ -18,6 +18,7 @@ var player_id: int
 
 var max_bombs = 1
 var bomb_range = 1
+var orientation: Main.Orientation = Main.Orientation.DOWN
 
 signal damage(new_lives)
 
@@ -49,18 +50,34 @@ func move(map_position: Vector2i) -> void:
 	var movedir: Vector2i = Vector2i(0, 0)
 	if Input.is_action_just_pressed(movedown):
 		movedir += Vector2i(0,1)
+		set_orientation(Main.Orientation.DOWN)
 	if Input.is_action_just_pressed(moveup):
 		movedir += Vector2i(0,-1)
+		set_orientation(Main.Orientation.UP)
 	if Input.is_action_just_pressed(moveright):
 		movedir += Vector2i(1,0)
+		set_orientation(Main.Orientation.RIGHT)
 	if Input.is_action_just_pressed(moveleft):
 		movedir += Vector2i(-1,0)
+		set_orientation(Main.Orientation.LEFT)
 	
 	movedir = map_position + movedir
 	if not map.collides(movedir):
 		var target_pos = terrain.map_to_local(movedir)
 		set_position(target_pos)
 		consume_energy(movedir)
+		
+func set_orientation(o: Main.Orientation):
+	orientation = o
+	match o:
+		Main.Orientation.DOWN:
+			$Sprite2D.rotation = 0
+		Main.Orientation.UP:
+			$Sprite2D.rotation = PI
+		Main.Orientation.RIGHT:
+			$Sprite2D.rotation = -PI / 2
+		Main.Orientation.LEFT:
+			$Sprite2D.rotation = PI / 2
 		
 func consume_energy(tile: Vector2i) -> void:
 	var energy = map.find_energy(tile)

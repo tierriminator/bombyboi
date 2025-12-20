@@ -12,6 +12,15 @@ var player_id: int
 
 @onready var terrainmap_path := get_node("/root/Map/Terrain")
 
+var lives = 3:
+	set(value):
+		lives = value
+		if lives <= 0:
+			$Sprite2D.flip_v = true
+
+func _ready() -> void:
+	add_to_group("players")
+
 func check_terrain(p_movedir: Vector2i) -> TileData:
 	return terrainmap_path.get_cell_tile_data(p_movedir)
 

@@ -1,9 +1,5 @@
 extends Node
 
-var spawnpoints = {
-	1: Vector2i(1,1),
-	2: Vector2i(18,8)
-}
 
 var faces = [
 	preload("res://Art/tierry.png"),
@@ -19,7 +15,7 @@ var walls = [
 	Vector2i(1, 4)
 ]
 
-var player_count = spawnpoints.size()
+var player_count: int
 
 @onready var terrain := get_node("/root/Map/Terrain")
 @onready var player_layer := get_node("/root/Map/Players")
@@ -27,12 +23,15 @@ var player_count = spawnpoints.size()
 @export var player_scene: PackedScene
 
 
+#func setup(player_count: int) -> void:
+	#create_map()
+	#place_players(Main.player_count)
 
-# Called when the node enters the scene tree for the first time.
+ #Called when the node enters the scene tree for the first time.
 func _ready() -> void:
 	create_map()
-	place_players(2)
-		
+	place_players(Main.player_count)
+	
 func create_map() -> void:
 	for n in 20:
 		var segment = walls.pick_random()

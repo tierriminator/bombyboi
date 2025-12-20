@@ -100,20 +100,27 @@ func get_random_player_id() -> int:
 		id = (id + 1) % 3
 	return id
 	
+func collides(tile: Vector2i) -> bool:
+	var tile_data = terrain.get_cell_tile_data(tile)
+	return tile_data.get_custom_data("has_collision") or has_bomb(tile)
+	
+func get_bombs() -> Array[Node]:
+	return get_tree().get_nodes_in_group("bombs")
+	
 func has_bomb(tile: Vector2i) -> bool:
-	for bomb in get_tree().get_nodes_in_group("bombs"):
+	for bomb in get_bombs():
 		if terrain.local_to_map(bomb.position) == tile:
 			return true
 	return false
 	
-func spawn_bomb(tile: Vector2i, player_id: int, range: int) -> void:
+func spawn_bomb(tile: Vector2i, player_id: int, explosion_range: int) -> void:
 	if has_bomb(tile):
 		return
 	var target_pos = terrain.map_to_local(tile)
 	var bomb = bomb_scene.instantiate()
 	bomb.position = target_pos
 	bomb.player_id = player_id
-	bomb.explosion_range = range
+	bomb.explosion_range = explosion_range
 	bombas.add_child(bomb)
 
 func spawn_energy(tile: Vector2i) -> void:

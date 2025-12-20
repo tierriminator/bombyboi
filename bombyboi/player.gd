@@ -40,6 +40,10 @@ func move(map_position: Vector2i) -> void:
 		
 func maybe_place_bomb(map_position: Vector2i) -> void:
 	if Input.is_action_just_pressed(place_bomb):
+		var target_pos = terrainmap_path.map_to_local(map_position)
+		for bomb in get_tree().get_nodes_in_group("bombs"):
+			if bomb.position == target_pos:
+				return
 		var bomb = bomb_scene.instantiate()
-		bomb.position = terrainmap_path.map_to_local(map_position)
+		bomb.position = target_pos
 		get_parent().add_child(bomb)

@@ -5,6 +5,7 @@ var bomb_live_seconds = 3.0
 var explosion_seconds = 1.0
 
 func _ready() -> void:
+	add_to_group("bombs")
 	$Timer.wait_time = bomb_live_seconds
 	$Timer.one_shot = true
 	$Timer.timeout.connect(_on_explode)

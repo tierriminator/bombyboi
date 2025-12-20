@@ -1,6 +1,7 @@
-[gd_scene load_steps=9 format=4 uid="uid://bnjvx3l80rsq1"]
+[gd_scene load_steps=10 format=4 uid="uid://bnjvx3l80rsq1"]
 
 [ext_resource type="Texture2D" uid="uid://dowvnmlh8syiv" path="res://Art/Basic_Tiles.png" id="1_c7s6e"]
+[ext_resource type="Script" uid="uid://dvynds7hjrh4m" path="res://map.gd" id="1_p5pve"]
 [ext_resource type="Texture2D" uid="uid://c7h4wmoxmhybv" path="res://Art/tiles.png" id="2_e0an3"]
 [ext_resource type="PackedScene" uid="uid://cxlf3jyrexxho" path="res://player.tscn" id="2_wijl4"]
 
@@ -41,6 +42,7 @@ physics_layer_0/collision_layer = 1
 sources/0 = SubResource("TileSetScenesCollectionSource_c7s6e")
 
 [node name="Map" type="Node"]
+script = ExtResource("1_p5pve")
 
 [node name="Terrain" type="TileMapLayer" parent="."]
 texture_filter = 1

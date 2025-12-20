@@ -2,6 +2,12 @@ extends CharacterBody2D
 
 var map_position: Vector2i
 
+@onready var playerId: int
+@onready var moveup: String
+@onready var movedown: String
+@onready var moveright: String
+@onready var moveleft: String
+
 @onready var playermap_path := get_node("/root/Map/Players")
 
 @onready var terrainmap_path := get_node("/root/Map/Terrain")

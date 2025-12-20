@@ -34,9 +34,9 @@ func _init() -> void:
 func check_terrain(p_movedir: Vector2i) -> TileData:
 	return terrainmap_path.get_cell_tile_data(p_movedir)
 
-func check_bomb(target_pos: Vector2) -> bool:
+func check_bomb(map_position: Vector2i) -> bool:
 	for bomb in get_tree().get_nodes_in_group("bombs"):
-		if bomb.position == target_pos:
+		if terrainmap_path.local_to_map(bomb.position) == map_position:
 			return true
 	return false
 
@@ -45,6 +45,10 @@ func _physics_process(delta: float) -> void:
 	var map_position = terrainmap_path.local_to_map(position)
 	move(map_position)
 	maybe_place_bomb(map_position)
+	
+func collides(map_position: Vector2i) -> bool:
+	var tile_data = terrainmap_path.get_cell_tile_data(map_position)
+	return tile_data.get_custom_data("has_collision") or check_bomb(map_position)
 		
 func move(map_position: Vector2i) -> void:
 	var movedir: Vector2i = Vector2i(0, 0)
@@ -58,15 +62,15 @@ func move(map_position: Vector2i) -> void:
 		movedir += Vector2i(-1,0)
 	
 	movedir = map_position + movedir
-	var target_pos = terrainmap_path.map_to_local(movedir)
-	if check_terrain(movedir).get_collision_polygons_count(0) == 0 and not check_bomb(target_pos):
+	if not collides(movedir):
+		var target_pos = terrainmap_path.map_to_local(movedir)
 		set_position(target_pos)
 		
 func maybe_place_bomb(map_position: Vector2i) -> void:
 	if Input.is_action_just_pressed(place_bomb) and bomb_count() < max_bombs:
-		var target_pos = terrainmap_path.map_to_local(map_position)
-		if check_bomb(target_pos):
+		if check_bomb(map_position):
 			return
+		var target_pos = terrainmap_path.map_to_local(map_position)
 		var bomb = bomb_scene.instantiate()
 		bomb.position = target_pos
 		bomb.player_id = player_id

@@ -23,8 +23,6 @@ var walls = [
 
 var player_count = spawnpoints.size()
 
-var pink_energy_p = 0.5
-
 @onready var terrain := get_node("/root/Map/Terrain")
 @onready var bombas := get_node("/root/Map/Bombas")
 @onready var player_layer := get_node("/root/Map/Players")
@@ -143,7 +141,7 @@ func has_energy(tile: Vector2i) -> bool:
 
 func spawn_energy(tile: Vector2i) -> void:
 	var energy = energy_scene.instantiate()
-	if randf() > pink_energy_p:
+	if randf() > Main.PINK_ENERGY_P:
 		energy.type = Main.EnergyType.GREEN
 	else:
 		energy.type = Main.EnergyType.PINK

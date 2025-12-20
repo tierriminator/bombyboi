@@ -3,7 +3,8 @@ extends Node
 var player_count: int
 var starting_lives: int
 
-var ENERGY_SPAWN_P = 0.5
+var ENERGY_SPAWN_P = 0.3
+var PINK_ENERGY_P = 0.2
 
 enum EnergyType { GREEN, PINK }
 

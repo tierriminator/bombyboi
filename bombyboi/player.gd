@@ -12,6 +12,9 @@ var player_id: int
 
 @onready var terrainmap_path := get_node("/root/Map/Terrain")
 
+var max_bombs = 1
+var bomb_range = 1
+
 var lives = 3:
 	set(value):
 		lives = value
@@ -53,10 +56,15 @@ func move(map_position: Vector2i) -> void:
 		set_position(target_pos)
 		
 func maybe_place_bomb(map_position: Vector2i) -> void:
-	if Input.is_action_just_pressed(place_bomb):
+	if Input.is_action_just_pressed(place_bomb) and bomb_count() < max_bombs:
 		var target_pos = terrainmap_path.map_to_local(map_position)
 		if check_bomb(target_pos):
 			return
 		var bomb = bomb_scene.instantiate()
 		bomb.position = target_pos
+		bomb.player_id = player_id
+		bomb.explosion_range = bomb_range
 		get_parent().add_child(bomb)
+		
+func bomb_count() -> int:
+	return get_tree().get_nodes_in_group("bombs").filter(func(b): return b.player_id == player_id).size()

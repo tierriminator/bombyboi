@@ -1,14 +1,15 @@
 extends StaticBody2D
 
 var explosion_texture: Texture2D = preload("res://Art/explosion.png")
-var bomb_live_seconds = 2.0
+var live_seconds = 2.0
 var explosion_seconds = 0.5
 var explosion_range = 3
 var explosion_sprites: Array[Sprite2D] = []
+var player_id: int
 
 func _ready() -> void:
 	add_to_group("bombs")
-	$Timer.wait_time = bomb_live_seconds
+	$Timer.wait_time = live_seconds
 	$Timer.one_shot = true
 	$Timer.timeout.connect(_on_explode)
 	$Timer.start()

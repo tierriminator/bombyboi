@@ -3,11 +3,11 @@
 [ext_resource type="Script" uid="uid://cs25ye2n3nfp7" path="res://main_menu.gd" id="1_7vrkn"]
 [ext_resource type="PackedScene" uid="uid://bnjvx3l80rsq1" path="res://map.tscn" id="2_fu7sn"]
 [ext_resource type="Texture2D" uid="uid://bfdcasx4apyea" path="res://Art/micha.png" id="3_glbon"]
-[ext_resource type="Script" path="res://p_1.gd" id="4_8qtwp"]
+[ext_resource type="Script" uid="uid://cr14hp1dlv6l8" path="res://p_1.gd" id="4_8qtwp"]
 [ext_resource type="Texture2D" uid="uid://x8irtmsggocw" path="res://Art/linus.png" id="4_nlkkf"]
 [ext_resource type="Texture2D" uid="uid://bhynom3shaor2" path="res://Art/tierry.png" id="5_qe12f"]
-[ext_resource type="Script" path="res://p_2.gd" id="6_dy7ct"]
-[ext_resource type="Script" path="res://p_3.gd" id="8_0o4t1"]
+[ext_resource type="Script" uid="uid://bammlhlcmt6h6" path="res://p_2.gd" id="6_dy7ct"]
+[ext_resource type="Script" uid="uid://ce7pnbmrqojct" path="res://p_3.gd" id="8_0o4t1"]
 
 [sub_resource type="LabelSettings" id="LabelSettings_rhts7"]
 font_size = 128

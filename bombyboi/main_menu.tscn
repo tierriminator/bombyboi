@@ -3,11 +3,11 @@
 [ext_resource type="Script" uid="uid://cs25ye2n3nfp7" path="res://main_menu.gd" id="1_7vrkn"]
 [ext_resource type="PackedScene" uid="uid://bnjvx3l80rsq1" path="res://map.tscn" id="2_fu7sn"]
 [ext_resource type="Texture2D" uid="uid://bfdcasx4apyea" path="res://Art/micha.png" id="3_glbon"]
-[ext_resource type="Script" uid="uid://cr14hp1dlv6l8" path="res://p_1.gd" id="4_8qtwp"]
+[ext_resource type="Script" path="res://p_1.gd" id="4_8qtwp"]
 [ext_resource type="Texture2D" uid="uid://x8irtmsggocw" path="res://Art/linus.png" id="4_nlkkf"]
 [ext_resource type="Texture2D" uid="uid://bhynom3shaor2" path="res://Art/tierry.png" id="5_qe12f"]
-[ext_resource type="Script" uid="uid://bammlhlcmt6h6" path="res://p_2.gd" id="6_dy7ct"]
-[ext_resource type="Script" uid="uid://ce7pnbmrqojct" path="res://p_3.gd" id="8_0o4t1"]
+[ext_resource type="Script" path="res://p_2.gd" id="6_dy7ct"]
+[ext_resource type="Script" path="res://p_3.gd" id="8_0o4t1"]
 
 [sub_resource type="LabelSettings" id="LabelSettings_rhts7"]
 font_size = 128
@@ -73,15 +73,13 @@ offset_bottom = 10.0
 grow_horizontal = 2
 grow_vertical = 2
 selected = 1
-item_count = 4
+item_count = 3
 popup/item_0/text = "1 Player"
 popup/item_0/id = 0
 popup/item_1/text = "2 Players"
 popup/item_1/id = 1
 popup/item_2/text = "3 Players"
 popup/item_2/id = 2
-popup/item_3/text = "4 Players"
-popup/item_3/id = 3
 
 [node name="StartingLives" type="OptionButton" parent="MenuCenter"]
 layout_mode = 1

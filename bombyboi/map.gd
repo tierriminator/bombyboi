@@ -5,11 +5,11 @@ var spawnpoints = {
 	2: Vector2i(18,8)
 }
 
-var faces = {
-	1: preload("res://Art/tierry.png"),
-	2: preload("res://Art/linus.png"),
-	3: preload("res://Art/micha.png")
-}
+var faces = [
+	preload("res://Art/tierry.png"),
+	preload("res://Art/linus.png"),
+	preload("res://Art/micha.png")
+]
 
 var walls = [
 	Vector2i(4, 1),

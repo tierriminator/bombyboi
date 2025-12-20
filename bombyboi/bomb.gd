@@ -39,6 +39,8 @@ func explode_tiles() -> void:
 		Vector2i(1, 0),
 	]
 
+	map.get_node("sounds/bamm").play()
+
 	for dir in directions:
 		for i in range(1, explosion_range + 1):
 			var current = bomb_tile + dir * i

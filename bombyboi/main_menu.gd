@@ -3,7 +3,6 @@ extends Control
 
 @export var first_map: PackedScene
 
-
 func _on_new_game_pressed() -> void:
 	load_map(first_map.resource_path)
 

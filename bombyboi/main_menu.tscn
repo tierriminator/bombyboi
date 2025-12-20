@@ -1,10 +1,13 @@
-[gd_scene load_steps=7 format=3 uid="uid://dq4445r8fphyq"]
+[gd_scene load_steps=10 format=3 uid="uid://dq4445r8fphyq"]
 
 [ext_resource type="Script" uid="uid://cs25ye2n3nfp7" path="res://main_menu.gd" id="1_7vrkn"]
 [ext_resource type="PackedScene" uid="uid://bnjvx3l80rsq1" path="res://map.tscn" id="2_fu7sn"]
 [ext_resource type="Texture2D" uid="uid://bfdcasx4apyea" path="res://Art/micha.png" id="3_glbon"]
+[ext_resource type="Script" uid="uid://cr14hp1dlv6l8" path="res://p_1.gd" id="4_8qtwp"]
 [ext_resource type="Texture2D" uid="uid://x8irtmsggocw" path="res://Art/linus.png" id="4_nlkkf"]
 [ext_resource type="Texture2D" uid="uid://bhynom3shaor2" path="res://Art/tierry.png" id="5_qe12f"]
+[ext_resource type="Script" uid="uid://bammlhlcmt6h6" path="res://p_2.gd" id="6_dy7ct"]
+[ext_resource type="Script" uid="uid://ce7pnbmrqojct" path="res://p_3.gd" id="8_0o4t1"]
 
 [sub_resource type="LabelSettings" id="LabelSettings_rhts7"]
 font_size = 128
@@ -82,29 +85,50 @@ popup/item_3/id = 3
 
 [node name="p1" type="TextureRect" parent="."]
 layout_mode = 0
-offset_left = 171.0
-offset_top = 250.0
-offset_right = 235.0
-offset_bottom = 314.0
+offset_left = 187.0
+offset_top = 291.0
+offset_right = 251.0
+offset_bottom = 355.0
+rotation = -0.2617994
 scale = Vector2(3, 3)
+pivot_offset = Vector2(32, 32)
 texture = ExtResource("3_glbon")
+script = ExtResource("4_8qtwp")
+
+[node name="Timer" type="Timer" parent="p1"]
+autostart = true
 
 [node name="p2" type="TextureRect" parent="."]
 layout_mode = 0
-offset_left = 922.0
-offset_top = 251.0
-offset_right = 986.0
-offset_bottom = 315.0
+offset_left = 967.0
+offset_top = 282.0
+offset_right = 1031.0
+offset_bottom = 346.0
+rotation = -0.2617994
 scale = Vector2(3, 3)
+pivot_offset = Vector2(32, 32)
 texture = ExtResource("4_nlkkf")
+script = ExtResource("6_dy7ct")
+
+[node name="Timer" type="Timer" parent="p2"]
+autostart = true
 
 [node name="p3" type="TextureRect" parent="."]
 layout_mode = 0
-offset_left = 546.0
-offset_top = 392.0
-offset_right = 610.0
-offset_bottom = 456.0
+offset_left = 609.0
+offset_top = 461.0
+offset_right = 673.0
+offset_bottom = 525.0
+rotation = 0.2617994
 scale = Vector2(3, 3)
+pivot_offset = Vector2(32, 32)
 texture = ExtResource("5_qe12f")
+script = ExtResource("8_0o4t1")
+
+[node name="Timer" type="Timer" parent="p3"]
+autostart = true
 
 [connection signal="pressed" from="MenuCenter/NewGame" to="." method="_on_new_game_pressed"]
+[connection signal="timeout" from="p1/Timer" to="p1" method="_on_timer_timeout"]
+[connection signal="timeout" from="p2/Timer" to="p2" method="_on_timer_timeout"]
+[connection signal="timeout" from="p3/Timer" to="p3" method="_on_timer_timeout"]

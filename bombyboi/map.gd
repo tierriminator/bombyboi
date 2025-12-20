@@ -22,6 +22,7 @@ var walls = [
 var player_count = spawnpoints.size()
 
 @onready var terrain := get_node("/root/Map/Terrain")
+@onready var player_layer := get_node("/root/Map/Players")
 
 @export var player_scene: PackedScene
 
@@ -67,8 +68,8 @@ func create_player(player: int, pos: Vector2i) -> void:
 	var psc = player_scene.instantiate()
 	psc.player_id = player + 1
 	psc.get_node("Sprite2D").texture = faces[player]
-	psc.set_position(terrain.map_to_local(pos))
-	add_child(psc)
+	psc.set_position(player_layer.map_to_local(pos))
+	player_layer.add_child(psc)
 		
 func get_random_spawn() -> Vector2i:
 	var x_start = 2

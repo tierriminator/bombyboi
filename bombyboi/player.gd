@@ -11,6 +11,7 @@ var player_id: int
 @onready var place_bomb = "p%d_place_bomb" % player_id
 
 @onready var terrainmap_path := get_node("/root/Map/Terrain")
+@onready var bombas_layer := get_node("/root/Map/Bombas")
 
 var max_bombs = 1
 var bomb_range = 1
@@ -70,7 +71,7 @@ func maybe_place_bomb(map_position: Vector2i) -> void:
 		bomb.position = target_pos
 		bomb.player_id = player_id
 		bomb.explosion_range = bomb_range
-		get_parent().add_child(bomb)
+		bombas_layer.add_child(bomb)
 		
 func bomb_count() -> int:
 	return get_tree().get_nodes_in_group("bombs").filter(func(b): return b.player_id == player_id).size()

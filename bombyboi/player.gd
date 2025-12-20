@@ -72,11 +72,15 @@ func move(map_position: Vector2i) -> void:
 		movedir += Vector2i(-1,0)
 		set_orientation(Main.Orientation.LEFT)
 	
-	movedir = map_position + movedir
-	if not map.collides(movedir):
-		var target_pos = terrain.map_to_local(movedir)
-		set_position(target_pos)
-		consume_energy(movedir)
+	if movedir != Vector2i(0,0):
+		var new_tile = map_position + movedir
+		if not map.collides(new_tile):
+			var target_pos = terrain.map_to_local(new_tile)
+			map.get_node("sounds/walk").play()
+			set_position(target_pos)
+			consume_energy(new_tile)
+		else:
+			map.get_node("sounds/wall").play()
 		
 func set_orientation(o: Main.Orientation):
 	orientation = o

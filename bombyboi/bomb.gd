@@ -3,6 +3,8 @@ extends StaticBody2D
 var explosion_texture: Texture2D = preload("res://Art/explosion.png")
 var bomb_live_seconds = 2.0
 var explosion_seconds = 0.5
+var explosion_range = 3
+var explosion_sprites: Array[Sprite2D] = []
 
 func _ready() -> void:
 	add_to_group("bombs")
@@ -15,28 +17,55 @@ func _on_explode() -> void:
 	$Sprite2D.texture = explosion_texture
 	$CollisionShape2D.set_deferred("disabled", true)
 
-	damage_nearby_players()
+	var explosion_tiles = get_explosion_tiles()
+	spawn_explosion_sprites(explosion_tiles)
+	damage_players(explosion_tiles)
 
 	$Timer.wait_time = explosion_seconds
 	$Timer.timeout.disconnect(_on_explode)
 	$Timer.timeout.connect(_on_explosion_finished)
 	$Timer.start()
 
-func damage_nearby_players() -> void:
+func get_explosion_tiles() -> Array[Vector2i]:
 	var terrain = get_node("/root/Map/Terrain")
 	var bomb_tile = terrain.local_to_map(position)
-	var explosion_tiles = [
-		bomb_tile,
-		bomb_tile + Vector2i(0, -1),
-		bomb_tile + Vector2i(0, 1),
-		bomb_tile + Vector2i(-1, 0),
-		bomb_tile + Vector2i(1, 0),
+	var tiles: Array[Vector2i] = [bomb_tile]
+	var directions = [
+		Vector2i(0, -1),
+		Vector2i(0, 1),
+		Vector2i(-1, 0),
+		Vector2i(1, 0),
 	]
 
+	for dir in directions:
+		for i in range(1, explosion_range + 1):
+			var current = bomb_tile + dir * i
+			var tile_data = terrain.get_cell_tile_data(current)
+			if tile_data == null or tile_data.get_collision_polygons_count(0) > 0:
+				break
+			tiles.append(current)
+
+	return tiles
+
+func spawn_explosion_sprites(tiles: Array[Vector2i]) -> void:
+	var terrain = get_node("/root/Map/Terrain")
+	for tile in tiles:
+		if tile == terrain.local_to_map(position):
+			continue
+		var sprite = Sprite2D.new()
+		sprite.texture = explosion_texture
+		sprite.position = terrain.map_to_local(tile)
+		get_parent().add_child(sprite)
+		explosion_sprites.append(sprite)
+
+func damage_players(explosion_tiles: Array[Vector2i]) -> void:
+	var terrain = get_node("/root/Map/Terrain")
 	for player in get_tree().get_nodes_in_group("players"):
 		var player_tile = terrain.local_to_map(player.position)
 		if player_tile in explosion_tiles:
 			player.lives -= 1
 
 func _on_explosion_finished() -> void:
+	for sprite in explosion_sprites:
+		sprite.queue_free()
 	queue_free()

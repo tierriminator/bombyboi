@@ -2,11 +2,6 @@ extends Node
 
 class_name Map
 
-var spawnpoints = {
-	1: Vector2i(1,1),
-	2: Vector2i(18,8)
-}
-
 var faces = [
 	preload("res://Art/tierry.png"),
 	preload("res://Art/linus.png"),
@@ -21,7 +16,7 @@ var walls = [
 	Vector2i(1, 4)
 ]
 
-var player_count = spawnpoints.size()
+var pink_energy_p = 0.5
 
 @onready var terrain := get_node("/root/Map/Terrain")
 @onready var bombas := get_node("/root/Map/Bombas")
@@ -36,9 +31,9 @@ var player_count = spawnpoints.size()
 # Called when the node enters the scene tree for the first time.
 func _ready() -> void:
 	create_map()
-	place_players(2)
+	place_players(Main.player_count)
 	$soundtrack.play()
-		
+
 func create_map() -> void:
 	for n in 20:
 		var segment = walls.pick_random()

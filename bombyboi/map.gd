@@ -62,7 +62,7 @@ func place_players(players: int) -> void:
 		
 func create_player(player: int) -> void:
 	var psc = player_scene.instantiate()
-	psc.player_id = player
+	psc.player_id = player + 1
 	psc.get_node("Sprite2D").texture = faces[player]
 	psc.set_position(terrain.map_to_local(get_random_spawn()))
 	add_child(psc)

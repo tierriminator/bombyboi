@@ -18,7 +18,11 @@ force/max_rate=false
 force/max_rate_hz=44100
 edit/trim=false
 edit/normalize=false
+<<<<<<< HEAD
 edit/loop_mode=2
+=======
+edit/loop_mode=0
+>>>>>>> 22ea074309481f122e990e4100ee6e8288e53c95
 edit/loop_begin=0
 edit/loop_end=-1
 compress/mode=2

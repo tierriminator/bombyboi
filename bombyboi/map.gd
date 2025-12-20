@@ -23,8 +23,6 @@ var walls = [
 
 var player_count = spawnpoints.size()
 
-var pink_energy_p = 0.5
-
 @onready var terrain := get_node("/root/Map/Terrain")
 @onready var bombas := get_node("/root/Map/Bombas")
 @onready var player_layer := get_node("/root/Map/Players")
@@ -114,23 +112,37 @@ func get_bombs() -> Array[Bomb]:
 	
 func has_bomb(tile: Vector2i) -> bool:
 	for bomb in get_bombs():
-		if terrain.local_to_map(bomb.position) == tile:
+		if bombas.local_to_map(bomb.position) == tile:
 			return true
 	return false
 	
-func spawn_bomb(tile: Vector2i, player_id: int, explosion_range: int) -> void:
+func spawn_bomb(tile: Vector2i, player: Player) -> void:
 	if has_bomb(tile):
 		return
 	var target_pos = terrain.map_to_local(tile)
-	var bomb = bomb_scene.instantiate()
+	var bomb: Bomb = bomb_scene.instantiate()
 	bomb.position = target_pos
-	bomb.player_id = player_id
-	bomb.explosion_range = explosion_range
+	bomb.player_id = player.player_id
+	bomb.explosion_range = player.bomb_range
 	bombas.add_child(bomb)
+	
+func get_energies() -> Array[Energy]:
+	var energies: Array[Energy] = []
+	energies.assign(get_tree().get_nodes_in_group("energies"))
+	return energies
+	
+func find_energy(tile: Vector2i) -> Energy:
+	for energy in get_energies():
+		if bombas.local_to_map(energy.position) == tile:
+			return energy
+	return null
+	
+func has_energy(tile: Vector2i) -> bool:
+	return find_energy(tile) == null
 
 func spawn_energy(tile: Vector2i) -> void:
 	var energy = energy_scene.instantiate()
-	if randf() > pink_energy_p:
+	if randf() > Main.PINK_ENERGY_P:
 		energy.type = Main.EnergyType.GREEN
 	else:
 		energy.type = Main.EnergyType.PINK

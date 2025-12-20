@@ -1,5 +1,7 @@
 extends CharacterBody2D
 
+class_name Player
+
 var bomb_scene: PackedScene = preload("res://bomb.tscn")
 
 var player_id: int
@@ -10,7 +12,7 @@ var player_id: int
 @onready var moveleft = "p%d_move_left" % player_id
 @onready var place_bomb = "p%d_place_bomb" % player_id
 
-@onready var map := get_node("/root/Map")
+@onready var map: Map = get_node("/root/Map")
 @onready var terrain := get_node("/root/Map/Terrain")
 @onready var bombas_layer := get_node("/root/Map/Bombas")
 
@@ -36,7 +38,7 @@ func _init() -> void:
 	add_to_group("players")
 	
 func _ready() -> void:
-	get_node("/root/Map/Hud/p%d_lives" %player_id).register_player(self)
+	get_node("/root/Map/Hud/Hud_p%d" %player_id).register_player(self)
 
 func _physics_process(delta: float) -> void:
 	var map_position = terrain.local_to_map(position)
@@ -58,10 +60,21 @@ func move(map_position: Vector2i) -> void:
 	if not map.collides(movedir):
 		var target_pos = terrain.map_to_local(movedir)
 		set_position(target_pos)
+		consume_energy(movedir)
+		
+func consume_energy(tile: Vector2i) -> void:
+	var energy = map.find_energy(tile)
+	if energy != null:
+		match energy.type:
+			Main.EnergyType.GREEN:
+				bomb_range += 1
+			Main.EnergyType.PINK:
+				max_bombs += 1
+		energy.queue_free()
 		
 func maybe_place_bomb(map_position: Vector2i) -> void:
 	if Input.is_action_just_pressed(place_bomb) and bomb_count() < max_bombs:
-		map.spawn_bomb(map_position, player_id, bomb_range)
+		map.spawn_bomb(map_position, self)
 		
 func bomb_count() -> int:
 	return map.get_bombs().filter(func(b): return b.player_id == player_id).size()

@@ -1,4 +1,4 @@
-[gd_scene load_steps=12 format=4 uid="uid://bnjvx3l80rsq1"]
+[gd_scene load_steps=11 format=4 uid="uid://bnjvx3l80rsq1"]
 
 [ext_resource type="Texture2D" uid="uid://dowvnmlh8syiv" path="res://Art/Basic_Tiles.png" id="1_c7s6e"]
 [ext_resource type="Script" uid="uid://dvynds7hjrh4m" path="res://map.gd" id="1_p5pve"]
@@ -40,17 +40,9 @@ scenes/1/scene = ExtResource("4_p5pve")
 tile_size = Vector2i(64, 64)
 sources/0 = SubResource("TileSetScenesCollectionSource_p5pve")
 
-[sub_resource type="TileSetScenesCollectionSource" id="TileSetScenesCollectionSource_c7s6e"]
-resource_name = "Players"
-scenes/1/scene = ExtResource("2_wijl4")
-
-[sub_resource type="TileSet" id="TileSet_wijl4"]
-tile_size = Vector2i(64, 64)
-physics_layer_0/collision_layer = 1
-sources/0 = SubResource("TileSetScenesCollectionSource_c7s6e")
-
 [node name="Map" type="Node"]
 script = ExtResource("1_p5pve")
+player_scene = ExtResource("2_wijl4")
 
 [node name="Terrain" type="TileMapLayer" parent="."]
 texture_filter = 1
@@ -60,7 +52,3 @@ tile_set = SubResource("TileSet_e0an3")
 [node name="Bombas" type="TileMapLayer" parent="."]
 tile_map_data = PackedByteArray("AAAHAAMAAAAAAAAAAQA=")
 tile_set = SubResource("TileSet_p5pve")
-
-[node name="Players" type="TileMapLayer" parent="."]
-tile_map_data = PackedByteArray("AAAFAAUAAAAAAAAAAQA=")
-tile_set = SubResource("TileSet_wijl4")

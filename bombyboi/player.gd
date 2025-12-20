@@ -17,11 +17,17 @@ var bomb_range = 1
 
 var lives = 3:
 	set(value):
+		if value < lives:
+			do_hit_animation()
 		lives = value
 		if lives <= 0:
 			$Sprite2D.flip_v = true
 
-func _ready() -> void:
+func do_hit_animation() -> void:
+	var tween = create_tween()
+	tween.tween_property($Sprite2D, "rotation", TAU, 0.3).from(0.0)
+
+func _init() -> void:
 	add_to_group("players")
 
 func check_terrain(p_movedir: Vector2i) -> TileData:

@@ -1,0 +1,80 @@
+[gd_scene load_steps=4 format=3 uid="uid://dq4445r8fphyq"]
+
+[ext_resource type="Script" uid="uid://cs25ye2n3nfp7" path="res://main_menu.gd" id="1_7vrkn"]
+[ext_resource type="PackedScene" uid="uid://bnjvx3l80rsq1" path="res://map.tscn" id="2_fu7sn"]
+
+[sub_resource type="LabelSettings" id="LabelSettings_rhts7"]
+font_size = 128
+
+[node name="MainMenu" type="Control"]
+layout_mode = 3
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+script = ExtResource("1_7vrkn")
+first_map = ExtResource("2_fu7sn")
+
+[node name="Label" type="Label" parent="."]
+layout_mode = 1
+anchors_preset = 10
+anchor_right = 1.0
+offset_bottom = 169.0
+grow_horizontal = 2
+text = "Bomby Bois"
+label_settings = SubResource("LabelSettings_rhts7")
+horizontal_alignment = 1
+vertical_alignment = 1
+
+[node name="MenuCenter" type="Control" parent="."]
+custom_minimum_size = Vector2(300, 160)
+layout_mode = 1
+anchors_preset = 8
+anchor_left = 0.5
+anchor_top = 0.5
+anchor_right = 0.5
+anchor_bottom = 0.5
+offset_left = -20.0
+offset_top = -20.0
+offset_right = 20.0
+offset_bottom = 20.0
+grow_horizontal = 2
+grow_vertical = 2
+
+[node name="NewGame" type="Button" parent="MenuCenter"]
+layout_mode = 1
+anchors_preset = 5
+anchor_left = 0.5
+anchor_right = 0.5
+offset_left = -4.0
+offset_right = 4.0
+offset_bottom = 8.0
+grow_horizontal = 2
+text = "Start Game"
+
+[node name="PlayerCount" type="OptionButton" parent="MenuCenter"]
+layout_mode = 1
+anchors_preset = 8
+anchor_left = 0.5
+anchor_top = 0.5
+anchor_right = 0.5
+anchor_bottom = 0.5
+offset_left = -16.0
+offset_top = -10.0
+offset_right = 16.0
+offset_bottom = 10.0
+grow_horizontal = 2
+grow_vertical = 2
+selected = 1
+item_count = 4
+popup/item_0/text = "1 Player"
+popup/item_0/id = 0
+popup/item_1/text = "2 Players"
+popup/item_1/id = 1
+popup/item_2/text = "3 Players"
+popup/item_2/id = 2
+popup/item_3/text = "4 Players"
+popup/item_3/id = 3
+
+[connection signal="pressed" from="MenuCenter/NewGame" to="." method="_on_new_game_pressed"]

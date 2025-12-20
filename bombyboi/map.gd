@@ -56,6 +56,9 @@ func set_tile(pos: Vector2i, type: int) -> void:
 	#print("set {0} {1} to {2}".format([str(pos.x), str(pos.y), str(type)]))
 	terrain.set_cell(Vector2i(pos.x, pos.y), 1, Vector2i(0, type))
 	
+func set_tile_to_empty(pos: Vector2i) -> void:
+	set_tile(pos, 1)
+	
 func place_players(players: int) -> void:
 	for player in players:
 		var pos = get_random_spawn()

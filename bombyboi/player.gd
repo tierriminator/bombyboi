@@ -2,8 +2,6 @@ extends CharacterBody2D
 
 var bomb_scene: PackedScene = preload("res://bomb.tscn")
 
-var map_position: Vector2i
-
 var player_id: int
 
 @onready var moveup = "p%d_move_up" % player_id
@@ -17,9 +15,15 @@ var player_id: int
 func check_terrain(p_movedir: Vector2i) -> TileData:
 	return terrainmap_path.get_cell_tile_data(p_movedir)
 
+func check_bomb(target_pos: Vector2) -> bool:
+	for bomb in get_tree().get_nodes_in_group("bombs"):
+		if bomb.position == target_pos:
+			return true
+	return false
+
 func _physics_process(delta: float) -> void:
 	
-	map_position = terrainmap_path.local_to_map(position)
+	var map_position = terrainmap_path.local_to_map(position)
 	move(map_position)
 	maybe_place_bomb(map_position)
 		
@@ -35,15 +39,15 @@ func move(map_position: Vector2i) -> void:
 		movedir += Vector2i(-1,0)
 	
 	movedir = map_position + movedir
-	if check_terrain(movedir).get_collision_polygons_count(0) == 0:
-		set_position(terrainmap_path.map_to_local(movedir))
+	var target_pos = terrainmap_path.map_to_local(movedir)
+	if check_terrain(movedir).get_collision_polygons_count(0) == 0 and not check_bomb(target_pos):
+		set_position(target_pos)
 		
 func maybe_place_bomb(map_position: Vector2i) -> void:
 	if Input.is_action_just_pressed(place_bomb):
 		var target_pos = terrainmap_path.map_to_local(map_position)
-		for bomb in get_tree().get_nodes_in_group("bombs"):
-			if bomb.position == target_pos:
-				return
+		if check_bomb(target_pos):
+			return
 		var bomb = bomb_scene.instantiate()
 		bomb.position = target_pos
 		get_parent().add_child(bomb)

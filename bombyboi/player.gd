@@ -16,11 +16,14 @@ var player_id: int
 var max_bombs = 1
 var bomb_range = 1
 
-var lives = 3:
+signal damage(new_lives)
+
+var lives = Main.starting_lives:
 	set(value):
 		if value < lives:
 			do_hit_animation()
 		lives = value
+		damage.emit(lives)
 		if lives <= 0:
 			$Sprite2D.flip_v = true
 
@@ -30,6 +33,9 @@ func do_hit_animation() -> void:
 
 func _init() -> void:
 	add_to_group("players")
+	
+func _ready() -> void:
+	get_node("/root/Map/Hud/p%d_lives" %player_id).register_player(self)
 
 func check_bomb(map_position: Vector2i) -> bool:
 	for bomb in get_tree().get_nodes_in_group("bombs"):

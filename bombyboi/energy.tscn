@@ -1,0 +1,14 @@
+[gd_scene load_steps=3 format=3 uid="uid://cvknoetih88aq"]
+
+[ext_resource type="Script" uid="uid://sdscloo2ajbf" path="res://energy.gd" id="1_ql0ev"]
+
+[sub_resource type="RectangleShape2D" id="RectangleShape2D_cd8iu"]
+size = Vector2(64, 64)
+
+[node name="StaticBody2D" type="StaticBody2D"]
+script = ExtResource("1_ql0ev")
+
+[node name="Sprite2D" type="Sprite2D" parent="."]
+
+[node name="CollisionShape2D" type="CollisionShape2D" parent="."]
+shape = SubResource("RectangleShape2D_cd8iu")

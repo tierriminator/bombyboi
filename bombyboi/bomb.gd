@@ -49,6 +49,7 @@ func explode_tiles() -> void:
 				break
 			explode_tile(current)
 			if explodes:
+				maybe_spawn_item(current)
 				break
 			
 
@@ -57,6 +58,9 @@ func explode_tile(tile: Vector2i):
 	damage_players(tile)
 	map.set_tile_to_empty(tile)
 	
+func maybe_spawn_item(tile: Vector2i):
+	if randf() < Main.ENERGY_SPAWN_P:
+		map.spawn_energy(tile)
 
 func spawn_explosion_sprite(tile: Vector2i) -> void:
 	var sprite = Sprite2D.new()

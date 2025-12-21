@@ -110,9 +110,10 @@ func get_random_spawn() -> Vector2i:
 		pos = Vector2i(randi_range(x_start, x_end), randi_range(y_start, y_end))
 	return pos
 	
-func has_player(pos: Vector2i) -> bool:
+func has_player(pos: Vector2i, except_id: int = -1) -> bool:
 	for player in get_tree().get_nodes_in_group("players"):
-		return terrain.local_to_map(player.position) == pos
+		if player.player_id != except_id:
+			return terrain.local_to_map(player.position) == pos
 	return false
 	
 func get_random_player_id() -> int:
@@ -189,7 +190,17 @@ func find_energy(tile: Vector2i) -> Energy:
 	return null
 	
 func has_energy(tile: Vector2i) -> bool:
-	return find_energy(tile) == null
+	return find_energy(tile) != null
+
+func has_bottle(tile: Vector2i) -> bool:
+	return find_bottle(tile) != null
+
+func has_item(tile: Vector2i) -> bool:
+	return has_energy(tile) or has_bottle(tile)
+
+func is_rock(tile: Vector2i) -> bool:
+	var tile_data = terrain.get_cell_tile_data(tile)
+	return tile_data != null and tile_data.get_custom_data("can_explode")
 
 func spawn_energy(tile: Vector2i) -> void:
 	var energy = energy_scene.instantiate()

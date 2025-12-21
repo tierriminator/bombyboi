@@ -21,7 +21,9 @@ var BOMBE_IN_FLESCHE_MOVE_FREQ = 0.2
 
 enum EnergyType { GREEN, PINK }
 
-enum Orientation { UP, DOWN, RIGHT, LEFT }
+enum Orientation { DOWN, LEFT, UP, RIGHT }
+
+var DIRECTIONS = [Vector2i(-1, 0), Vector2i(1, 0), Vector2i(0, -1), Vector2i(0, 1)]
 
 func load_map(map_path: String) -> void:
 	

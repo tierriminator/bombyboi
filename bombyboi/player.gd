@@ -68,7 +68,7 @@ func _ready() -> void:
 		var timer = Timer.new()
 		add_child(timer)
 		timer.one_shot = false
-		timer.timeout.connect(random_action)
+		timer.timeout.connect(ai_action)
 		timer.wait_time = 0.5
 		timer.start()
 
@@ -90,17 +90,178 @@ func action_move(map_position: Vector2i) -> void:
 		movedir += Vector2i(-1,0)
 	move(map_position, movedir)
 	
-func random_action() -> void:
+func ai_action() -> void:
 	var map_position = terrain.local_to_map(position)
-	if randf() < 0.1 and can_place_bomb():
-		place_bomb(map_position)
+	var visible_tiles = get_visible_tiles()
+	var possible_destinations = visible_tiles.filter(func (t): return not map.collides(t) and map_position.distance_squared_to(t) == 1)
+	var possible_steps: Array[Vector2i] = []
+	possible_steps.assign(possible_destinations.map(func (t): return t - map_position))
+	var visible_bombs: Array[Vector2i] = []
+	visible_bombs.assign(visible_tiles.filter(func (t): return map.has_bomb(t)))
+	if not visible_bombs.is_empty():
+		flee(visible_bombs, possible_steps)
+		return
+	var visible_players: Array[Vector2i] = []
+	visible_players.assign(visible_tiles.filter(func (t): return map.has_player(t, player_id)))
+	if not visible_players.is_empty() and randf() < 0.5 and bomb_count() > 0:
+		attack_players(visible_players, possible_steps)
+		return
+
+	# Move towards closest visible item
+	var visible_items: Array[Vector2i] = []
+	visible_items.assign(visible_tiles.filter(func (t): return map.has_item(t)))
+	if not visible_items.is_empty():
+		var target = get_closest_tile(visible_items, map_position)
+		move(map_position, get_step_towards(target, map_position))
+		return
+
+	# Attack rocks
+	var visible_rocks: Array[Vector2i] = []
+	visible_rocks.assign(visible_tiles.filter(func (t): return map.is_rock(t)))
+	if not visible_rocks.is_empty() and can_place_bomb():
+		attack_targets(visible_rocks, possible_steps, map_position)
+		return
+
+	# Random step
+	if not possible_steps.is_empty():
+		move(map_position, possible_steps.pick_random())
+
+func attack_targets(targets: Array[Vector2i], possible_steps: Array[Vector2i], map_position: Vector2i) -> void:
+	if bottle_count == 0:
+		attack_targets_without_bottle(targets, map_position)
 	else:
-		var d: Vector2i
-		for i in 10:
-			d = [Vector2i(-1, 0), Vector2i(1, 0), Vector2i(0, -1), Vector2i(0, 1)].pick_random()
-			if not map.collides(map_position + d):
+		attack_targets_with_bottle(targets, possible_steps, map_position)
+
+func attack_targets_without_bottle(targets: Array[Vector2i], map_position: Vector2i) -> void:
+	for target_tile in targets:
+		if is_in_range(target_tile):
+			place_bomb(map_position)
+			return
+
+	if randf() < 0.5:
+		var closest = get_closest_tile(targets, map_position)
+		move(map_position, get_step_towards(closest, map_position))
+	else:
+		place_bomb(map_position)
+
+func attack_targets_with_bottle(targets: Array[Vector2i], possible_steps: Array[Vector2i], map_position: Vector2i) -> void:
+	for target_tile in targets:
+		var diff = target_tile - map_position
+		var dist = abs(diff.x) + abs(diff.y)
+		if dist >= 3 and is_facing(target_tile, map_position):
+			place_bomb(map_position)
+			return
+
+	var far_targets: Array[Vector2i] = []
+	for target_tile in targets:
+		var diff = target_tile - map_position
+		var dist = abs(diff.x) + abs(diff.y)
+		if dist >= 4:
+			far_targets.append(target_tile)
+
+	if not far_targets.is_empty():
+		var target = far_targets.pick_random()
+		move(map_position, get_step_towards(target, map_position))
+		return
+
+	var escape_steps: Array[Vector2i] = []
+	for step in possible_steps:
+		var new_pos = map_position + step
+		for target_tile in targets:
+			if new_pos.distance_squared_to(target_tile) > map_position.distance_squared_to(target_tile):
+				escape_steps.append(step)
 				break
-		move(map_position, d)
+
+	if not escape_steps.is_empty():
+		move(map_position, escape_steps.pick_random())
+	else:
+		move(map_position, possible_steps.pick_random())
+
+func get_closest_tile(tiles: Array[Vector2i], from: Vector2i) -> Vector2i:
+	var closest = tiles[0]
+	var closest_dist = from.distance_squared_to(closest)
+	for tile in tiles:
+		var dist = from.distance_squared_to(tile)
+		if dist < closest_dist:
+			closest_dist = dist
+			closest = tile
+	return closest
+
+func get_visible_tiles() -> Array[Vector2i]:
+	var map_position = terrain.local_to_map(position)
+	var out: Array[Vector2i] = [map_position]
+	for d in Main.DIRECTIONS:
+		var i = 1
+		while true:
+			var next = map_position + d*i
+			out.append(next)
+			if map.collides(next):
+				break
+			i += 1
+	return out
+	
+func is_in_range(tile: Vector2i) -> bool:
+	var map_position = terrain.local_to_map(position)
+	var diff = map_position - tile
+	var absx = abs(diff.x)
+	var absy = abs(diff.y)
+	return max(absx, absy) <= bomb_range and min(absx, absy) == 0
+	
+func flee(viewed_bombs: Array[Vector2i], possible_steps: Array[Vector2i]) -> void:
+	var map_position = terrain.local_to_map(position)
+	if possible_steps.is_empty() or viewed_bombs.is_empty():
+		return
+
+	var best_steps: Array[Vector2i] = []
+	var best_min_distance = -1
+
+	for step in possible_steps:
+		var new_pos = map_position + step
+		var min_distance = INF
+		for bomb in viewed_bombs:
+			var dist = new_pos.distance_squared_to(bomb)
+			if dist < min_distance:
+				min_distance = dist
+		if min_distance > best_min_distance:
+			best_min_distance = min_distance
+			best_steps = [step]
+		elif min_distance == best_min_distance:
+			best_steps.append(step)	
+
+	if not best_steps.is_empty():
+		move(map_position, best_steps.pick_random())
+		
+func attack_players(visible_players: Array[Vector2i], possible_steps: Array[Vector2i]) -> void:
+	var map_position = terrain.local_to_map(position)
+	attack_targets(visible_players, possible_steps, map_position)
+
+func get_step_towards(target: Vector2i, from: Vector2i) -> Vector2i:
+	var diff = target - from
+	if diff.x != 0:
+		return Vector2i(sign(diff.x), 0)
+	else:
+		return Vector2i(0, sign(diff.y))
+
+func get_orientation_vector() -> Vector2i:
+	match orientation:
+		Main.Orientation.UP:
+			return Vector2i(0, -1)
+		Main.Orientation.DOWN:
+			return Vector2i(0, 1)
+		Main.Orientation.LEFT:
+			return Vector2i(-1, 0)
+		Main.Orientation.RIGHT:
+			return Vector2i(1, 0)
+	return Vector2i(0, 0)
+
+func is_facing(target: Vector2i, from: Vector2i) -> bool:
+	var diff = target - from
+	var dir = get_orientation_vector()
+	# Check if target is in the direction we're facing
+	if dir.x != 0:
+		return sign(diff.x) == dir.x and diff.y == 0
+	else:
+		return sign(diff.y) == dir.y and diff.x == 0
 		
 func move(map_position: Vector2i, direction: Vector2i) -> void:
 	if direction == Vector2i(0,0):

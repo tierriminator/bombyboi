@@ -190,7 +190,7 @@ func attack_targets_with_bottle(targets: Array[Vector2i], possible_steps: Array[
 
 	if not escape_steps.is_empty():
 		move(map_position, escape_steps.pick_random())
-	else:
+	elif not possible_steps.is_empty():
 		move(map_position, possible_steps.pick_random())
 
 func get_closest_tile(tiles: Array[Vector2i], from: Vector2i) -> Vector2i:

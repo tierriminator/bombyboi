@@ -1,7 +1,7 @@
 [gd_scene load_steps=5 format=3 uid="uid://cdvf4fos1su6"]
 
 [ext_resource type="Texture2D" uid="uid://lq0yqdxrhfqg" path="res://Art/podest.png" id="1_y26ei"]
-[ext_resource type="Script" path="res://game_over.gd" id="1_yxx3c"]
+[ext_resource type="Script" uid="uid://du28ui5i20sge" path="res://game_over.gd" id="1_yxx3c"]
 [ext_resource type="AudioStream" uid="uid://c4ho8mw4ldod7" path="res://Sounds/episch.wav" id="3_ccer4"]
 
 [sub_resource type="LabelSettings" id="LabelSettings_xapjj"]
@@ -36,9 +36,10 @@ anchor_left = 0.5
 anchor_top = 1.0
 anchor_right = 0.5
 anchor_bottom = 1.0
-offset_left = -20.0
-offset_top = -40.0
-offset_right = 20.0
+offset_left = -420.0
+offset_top = -525.0
+offset_right = 420.0
+offset_bottom = -105.0
 grow_horizontal = 2
 grow_vertical = 0
 texture = ExtResource("1_y26ei")
@@ -47,26 +48,43 @@ texture = ExtResource("1_y26ei")
 custom_minimum_size = Vector2(128, 128)
 layout_mode = 0
 offset_left = 560.0
-offset_top = 200.0
+offset_top = 95.0
 offset_right = 688.0
-offset_bottom = 328.0
+offset_bottom = 223.0
 
 [node name="place_2" type="TextureRect" parent="."]
 custom_minimum_size = Vector2(128, 128)
 layout_mode = 0
 offset_left = 309.0
-offset_top = 294.0
+offset_top = 189.0
 offset_right = 437.0
-offset_bottom = 422.0
+offset_bottom = 317.0
 
 [node name="place_3" type="TextureRect" parent="."]
 custom_minimum_size = Vector2(128, 128)
 layout_mode = 0
 offset_left = 817.0
-offset_top = 331.0
+offset_top = 226.0
 offset_right = 945.0
-offset_bottom = 459.0
+offset_bottom = 354.0
 
 [node name="AudioStreamPlayer" type="AudioStreamPlayer" parent="."]
 stream = ExtResource("3_ccer4")
 volume_db = -5.0
+
+[node name="Button" type="Button" parent="."]
+custom_minimum_size = Vector2(256, 64)
+layout_mode = 1
+anchors_preset = 7
+anchor_left = 0.5
+anchor_top = 1.0
+anchor_right = 0.5
+anchor_bottom = 1.0
+offset_left = -4.0
+offset_top = -8.0
+offset_right = 4.0
+grow_horizontal = 2
+grow_vertical = 0
+text = "Back to Main Menu"
+
+[connection signal="pressed" from="Button" to="." method="_on_button_pressed"]

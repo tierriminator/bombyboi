@@ -1,6 +1,8 @@
 extends Control
 
 
+var main_menu: PackedScene = preload("res://main_menu.tscn")
+
 # Called when the node enters the scene tree for the first time.
 func _ready() -> void:
 	$AudioStreamPlayer.play()
@@ -11,3 +13,7 @@ func _ready() -> void:
 # Called every frame. 'delta' is the elapsed time since the previous frame.
 func _process(delta: float) -> void:
 	pass
+
+
+func _on_button_pressed() -> void:
+	Main.load_map(main_menu.resource_path)

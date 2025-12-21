@@ -1,4 +1,7 @@
-[gd_scene load_steps=2 format=3 uid="uid://udxoofn8ttbu"]
+[gd_scene load_steps=4 format=3 uid="uid://udxoofn8ttbu"]
+
+[ext_resource type="Texture2D" uid="uid://lq0yqdxrhfqg" path="res://Art/podest.png" id="1_y26ei"]
+[ext_resource type="Script" uid="uid://du28ui5i20sge" path="res://game_over.gd" id="1_yxx3c"]
 
 [sub_resource type="LabelSettings" id="LabelSettings_xapjj"]
 font_size = 64
@@ -10,6 +13,7 @@ anchor_right = 1.0
 anchor_bottom = 1.0
 grow_horizontal = 2
 grow_vertical = 2
+script = ExtResource("1_yxx3c")
 
 [node name="Label" type="Label" parent="."]
 layout_mode = 1
@@ -36,27 +40,28 @@ offset_top = -40.0
 offset_right = 20.0
 grow_horizontal = 2
 grow_vertical = 0
+texture = ExtResource("1_y26ei")
 
 [node name="place_1" type="TextureRect" parent="."]
 custom_minimum_size = Vector2(128, 128)
 layout_mode = 0
-offset_left = 586.0
-offset_top = 259.0
-offset_right = 714.0
-offset_bottom = 387.0
+offset_left = 560.0
+offset_top = 200.0
+offset_right = 688.0
+offset_bottom = 328.0
 
 [node name="place_2" type="TextureRect" parent="."]
 custom_minimum_size = Vector2(128, 128)
 layout_mode = 0
-offset_left = 397.0
-offset_top = 348.0
-offset_right = 525.0
-offset_bottom = 476.0
+offset_left = 309.0
+offset_top = 294.0
+offset_right = 437.0
+offset_bottom = 422.0
 
 [node name="place_3" type="TextureRect" parent="."]
 custom_minimum_size = Vector2(128, 128)
 layout_mode = 0
-offset_left = 775.0
-offset_top = 394.0
-offset_right = 903.0
-offset_bottom = 522.0
+offset_left = 817.0
+offset_top = 331.0
+offset_right = 945.0
+offset_bottom = 459.0

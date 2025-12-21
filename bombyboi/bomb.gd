@@ -3,7 +3,6 @@ extends BaseBomb
 class_name Bomb
 
 var live_seconds = 2.0
-var explosion_range = 3
 var player_id: int
 
 func _ready() -> void:
@@ -17,18 +16,15 @@ func _ready() -> void:
 	live_timer.timeout.connect(_on_explode)
 	live_timer.start()
 
-func explode_tiles() -> void:
-	var bomb_tile = terrain.local_to_map(position)
+func danger_zone() -> Array[Vector2i]:
+	var bomb_tile = get_tile()
+	var tiles: Array[Vector2i] = [bomb_tile]
 	var directions = [
 		Vector2i(0, -1),
 		Vector2i(0, 1),
 		Vector2i(-1, 0),
 		Vector2i(1, 0),
 	]
-	
-	explode_tile(bomb_tile)
-
-	map.get_node("sounds/bamm").play()
 
 	for dir in directions:
 		for i in range(1, explosion_range + 1):
@@ -36,11 +32,12 @@ func explode_tiles() -> void:
 			var explodes = map.tile_explodes(current)
 			if map.tile_collides(current) and not explodes:
 				break
-			explode_tile(current)
+			tiles.append(current)
 			if explodes:
 				break
-			
-	
+
+	return tiles
+
 func maybe_spawn_item(tile: Vector2i):
 	if randf() < Main.ENERGY_SPAWN_P:
 		map.spawn_energy(tile)

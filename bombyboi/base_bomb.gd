@@ -5,6 +5,7 @@ class_name BaseBomb
 var explosion_texture: Texture2D = preload("res://Art/explosion.png")
 var explosion_seconds = 0.5
 var explosion_sprites: Array[Sprite2D] = []
+var explosion_range: int = 1
 
 var sprite: Sprite2D
 
@@ -13,7 +14,24 @@ var sprite: Sprite2D
 @onready var map: Map = get_node("/root/Map")
 
 func explode_tiles() -> void:
+	map.get_node("sounds/bamm").play()
+	for tile in danger_zone():
+		explode_tile(tile)
+
+func get_tile() -> Vector2i:
+	return terrain.local_to_map(position)
+
+func danger_zone() -> Array[Vector2i]:
 	assert(false, "Not implemented")
+	return []
+
+func in_danger_zone(tile: Vector2i) -> bool:
+	return tile in danger_zone()
+
+func get_effective_distance(tile: Vector2i) -> float:
+	if not in_danger_zone(tile):
+		return INF
+	return tile.distance_squared_to(get_tile())
 
 # Called when the node enters the scene tree for the first time.
 func _ready() -> void:

@@ -96,15 +96,22 @@ func ai_action() -> void:
 	var possible_destinations = visible_tiles.filter(func (t): return not map.collides(t) and map_position.distance_squared_to(t) == 1)
 	var possible_steps: Array[Vector2i] = []
 	possible_steps.assign(possible_destinations.map(func (t): return t - map_position))
-	var visible_bombs: Array[Vector2i] = []
-	visible_bombs.assign(visible_tiles.filter(func (t): return map.has_bomb(t)))
+
+	var visible_bomb_tiles: Array[Vector2i] = []
+	visible_bomb_tiles.assign(visible_tiles.filter(func (t): return map.has_bomb(t)))
+	var visible_bombs = map.get_bombs().filter(func (b): return b.get_tile() in visible_bomb_tiles)
+
+	# Filter steps to never decrease effective distance to any bomb
+	var safe_steps: Array[Vector2i] = []
+	safe_steps.assign(possible_steps.filter(func (s): return is_safe_step(s, map_position, visible_bombs)))
+
 	if not visible_bombs.is_empty():
-		flee(visible_bombs, possible_steps)
+		flee(visible_bombs, safe_steps)
 		return
 	var visible_players: Array[Vector2i] = []
 	visible_players.assign(visible_tiles.filter(func (t): return map.has_player(t, player_id)))
 	if not visible_players.is_empty() and randf() < 0.5 and bomb_count() > 0:
-		attack_players(visible_players, possible_steps)
+		attack_players(visible_players, safe_steps)
 		return
 
 	# Move towards closest visible item
@@ -112,19 +119,23 @@ func ai_action() -> void:
 	visible_items.assign(visible_tiles.filter(func (t): return map.has_item(t)))
 	if not visible_items.is_empty():
 		var target = get_closest_tile(visible_items, map_position)
-		move(map_position, get_step_towards(target, map_position))
+		var step = get_step_towards(target, map_position)
+		if step in safe_steps:
+			move(map_position, step)
+		elif not safe_steps.is_empty():
+			move(map_position, safe_steps.pick_random())
 		return
 
 	# Attack rocks
 	var visible_rocks: Array[Vector2i] = []
 	visible_rocks.assign(visible_tiles.filter(func (t): return map.is_rock(t)))
 	if not visible_rocks.is_empty() and can_place_bomb():
-		attack_targets(visible_rocks, possible_steps, map_position)
+		attack_targets(visible_rocks, safe_steps, map_position)
 		return
 
 	# Random step
-	if not possible_steps.is_empty():
-		move(map_position, possible_steps.pick_random())
+	if not safe_steps.is_empty():
+		move(map_position, safe_steps.pick_random())
 
 func attack_targets(targets: Array[Vector2i], possible_steps: Array[Vector2i], map_position: Vector2i) -> void:
 	if bottle_count == 0:
@@ -207,29 +218,66 @@ func is_in_range(tile: Vector2i) -> bool:
 	var absy = abs(diff.y)
 	return max(absx, absy) <= bomb_range and min(absx, absy) == 0
 	
-func flee(viewed_bombs: Array[Vector2i], possible_steps: Array[Vector2i]) -> void:
+func flee(visible_bombs: Array, possible_steps: Array[Vector2i]) -> void:
 	var map_position = terrain.local_to_map(position)
-	if possible_steps.is_empty() or viewed_bombs.is_empty():
+	if visible_bombs.is_empty():
 		return
 
-	var best_steps: Array[Vector2i] = []
-	var best_min_distance = -1
+	# Calculate current position's min distance to bombs
+	var current_min_distance = INF
+	for bomb in visible_bombs:
+		var dist = map_position.distance_squared_to(bomb.get_tile())
+		if dist < current_min_distance:
+			current_min_distance = dist
+
+	# Find steps that improve or maintain distance (prefer staying if moving is worse)
+	var best_steps: Array[Vector2i] = [Vector2i(0, 0)]  # staying is default
+	var best_min_distance = current_min_distance
 
 	for step in possible_steps:
 		var new_pos = map_position + step
 		var min_distance = INF
-		for bomb in viewed_bombs:
-			var dist = new_pos.distance_squared_to(bomb)
+		for bomb in visible_bombs:
+			var dist = new_pos.distance_squared_to(bomb.get_tile())
 			if dist < min_distance:
 				min_distance = dist
 		if min_distance > best_min_distance:
 			best_min_distance = min_distance
 			best_steps = [step]
 		elif min_distance == best_min_distance:
-			best_steps.append(step)	
+			best_steps.append(step)
 
-	if not best_steps.is_empty():
-		move(map_position, best_steps.pick_random())
+	# Prefer directions where we can see further
+	var best_visibility = -1
+	var best_visibility_steps: Array[Vector2i] = []
+	for step in best_steps:
+		var visibility = get_visibility_in_direction(map_position, step)
+		if visibility > best_visibility:
+			best_visibility = visibility
+			best_visibility_steps = [step]
+		elif visibility == best_visibility:
+			best_visibility_steps.append(step)
+
+	move(map_position, best_visibility_steps.pick_random())
+
+func get_visibility_in_direction(from: Vector2i, direction: Vector2i) -> int:
+	if direction == Vector2i(0, 0):
+		return 0
+	var count = 0
+	var pos = from + direction
+	while not map.collides(pos):
+		count += 1
+		pos += direction
+	return count
+
+func is_safe_step(step: Vector2i, from: Vector2i, bombs: Array) -> bool:
+	var new_pos = from + step
+	for bomb in bombs:
+		var old_eff_dist = bomb.get_effective_distance(from)
+		var new_eff_dist = bomb.get_effective_distance(new_pos)
+		if new_eff_dist < old_eff_dist:
+			return false
+	return true
 		
 func attack_players(visible_players: Array[Vector2i], possible_steps: Array[Vector2i]) -> void:
 	var map_position = terrain.local_to_map(position)

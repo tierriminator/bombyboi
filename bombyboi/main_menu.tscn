@@ -17,6 +17,8 @@ layout_mode = 3
 anchors_preset = 15
 anchor_right = 1.0
 anchor_bottom = 1.0
+offset_top = 3.0
+offset_bottom = 3.0
 grow_horizontal = 2
 grow_vertical = 2
 script = ExtResource("1_7vrkn")
@@ -32,74 +34,79 @@ label_settings = SubResource("LabelSettings_rhts7")
 horizontal_alignment = 1
 vertical_alignment = 1
 
-[node name="MenuCenter" type="Control" parent="."]
-custom_minimum_size = Vector2(300, 160)
-layout_mode = 1
-anchors_preset = 8
-anchor_left = 0.5
-anchor_top = 0.5
-anchor_right = 0.5
-anchor_bottom = 0.5
-offset_left = -150.0
-offset_top = -106.0
-offset_right = 150.0
-offset_bottom = 54.0
-grow_horizontal = 2
-grow_vertical = 2
+[node name="CenterControls" type="VBoxContainer" parent="."]
+layout_mode = 0
+offset_left = 571.0
+offset_top = 235.0
+offset_right = 719.0
+offset_bottom = 385.0
 
-[node name="NewGame" type="Button" parent="MenuCenter"]
-layout_mode = 1
-anchors_preset = 5
-anchor_left = 0.5
-anchor_right = 0.5
-offset_left = -4.0
-offset_right = 4.0
-offset_bottom = 8.0
-grow_horizontal = 2
+[node name="HumansControl" type="HFlowContainer" parent="CenterControls"]
+layout_mode = 2
+
+[node name="Minus" type="Button" parent="CenterControls/HumansControl"]
+layout_mode = 2
+text = "-"
+
+[node name="Count" type="Label" parent="CenterControls/HumansControl"]
+layout_mode = 2
+text = "2"
+
+[node name="Plus" type="Button" parent="CenterControls/HumansControl"]
+layout_mode = 2
+text = "+"
+
+[node name="Label" type="Label" parent="CenterControls/HumansControl"]
+layout_mode = 2
+size_flags_horizontal = 3
+text = "Humans"
+horizontal_alignment = 2
+
+[node name="AIControl" type="HFlowContainer" parent="CenterControls"]
+layout_mode = 2
+
+[node name="Minus" type="Button" parent="CenterControls/AIControl"]
+layout_mode = 2
+text = "-"
+
+[node name="Count" type="Label" parent="CenterControls/AIControl"]
+layout_mode = 2
+text = "0"
+
+[node name="Plus" type="Button" parent="CenterControls/AIControl"]
+layout_mode = 2
+text = "+"
+
+[node name="Label" type="Label" parent="CenterControls/AIControl"]
+layout_mode = 2
+size_flags_horizontal = 3
+text = "AIs"
+horizontal_alignment = 2
+
+[node name="LivesControl" type="HFlowContainer" parent="CenterControls"]
+layout_mode = 2
+
+[node name="Minus" type="Button" parent="CenterControls/LivesControl"]
+layout_mode = 2
+text = "-"
+
+[node name="Count" type="Label" parent="CenterControls/LivesControl"]
+layout_mode = 2
+text = "3"
+
+[node name="Plus" type="Button" parent="CenterControls/LivesControl"]
+layout_mode = 2
+text = "+"
+
+[node name="Label" type="Label" parent="CenterControls/LivesControl"]
+layout_mode = 2
+size_flags_horizontal = 3
+text = "Lives"
+horizontal_alignment = 2
+
+[node name="NewGame" type="Button" parent="CenterControls"]
+layout_mode = 2
 text = "Start Game"
-
-[node name="PlayerCount" type="OptionButton" parent="MenuCenter"]
-layout_mode = 1
-anchors_preset = 8
-anchor_left = 0.5
-anchor_top = 0.5
-anchor_right = 0.5
-anchor_bottom = 0.5
-offset_left = -16.0
-offset_top = -10.0
-offset_right = 16.0
-offset_bottom = 10.0
-grow_horizontal = 2
-grow_vertical = 2
-selected = 1
-item_count = 3
-popup/item_0/text = "1 Player"
-popup/item_0/id = 0
-popup/item_1/text = "2 Players"
-popup/item_1/id = 1
-popup/item_2/text = "3 Players"
-popup/item_2/id = 2
-
-[node name="StartingLives" type="OptionButton" parent="MenuCenter"]
-layout_mode = 1
-anchors_preset = 7
-anchor_left = 0.5
-anchor_top = 1.0
-anchor_right = 0.5
-anchor_bottom = 1.0
-offset_left = -42.5
-offset_top = -31.0
-offset_right = 42.5
-grow_horizontal = 2
-grow_vertical = 0
-selected = 0
-item_count = 3
-popup/item_0/text = "1 Life"
-popup/item_0/id = 0
-popup/item_1/text = "2 Lives"
-popup/item_1/id = 1
-popup/item_2/text = "3 Lives"
-popup/item_2/id = 2
 
 [node name="p1" type="TextureRect" parent="."]
 layout_mode = 0
@@ -150,7 +157,13 @@ autostart = true
 stream = ExtResource("9_dy7ct")
 volume_db = -10.0
 
-[connection signal="pressed" from="MenuCenter/NewGame" to="." method="_on_new_game_pressed"]
+[connection signal="pressed" from="CenterControls/HumansControl/Minus" to="." method="_on_human_minus_pressed"]
+[connection signal="pressed" from="CenterControls/HumansControl/Plus" to="." method="_on_human_plus_pressed"]
+[connection signal="pressed" from="CenterControls/AIControl/Minus" to="." method="_on_ai_minus_pressed"]
+[connection signal="pressed" from="CenterControls/AIControl/Plus" to="." method="_on_ai_plus_pressed"]
+[connection signal="pressed" from="CenterControls/LivesControl/Minus" to="." method="_on_lives_minus_pressed"]
+[connection signal="pressed" from="CenterControls/LivesControl/Plus" to="." method="_on_lives_plus_pressed"]
+[connection signal="pressed" from="CenterControls/NewGame" to="." method="_on_new_game_pressed"]
 [connection signal="timeout" from="p1/Timer" to="p1" method="_on_timer_timeout"]
 [connection signal="timeout" from="p2/Timer" to="p2" method="_on_timer_timeout"]
 [connection signal="timeout" from="p3/Timer" to="p3" method="_on_timer_timeout"]

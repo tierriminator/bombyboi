@@ -38,6 +38,8 @@ func explode_tiles() -> void:
 		Vector2i(-1, 0),
 		Vector2i(1, 0),
 	]
+	
+	explode_tile(bomb_tile)
 
 	map.get_node("sounds/bamm").play()
 

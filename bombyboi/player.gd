@@ -97,16 +97,21 @@ func ai_action() -> void:
 	var possible_steps: Array[Vector2i] = []
 	possible_steps.assign(possible_destinations.map(func (t): return t - map_position))
 
-	var visible_bomb_tiles: Array[Vector2i] = []
-	visible_bomb_tiles.assign(visible_tiles.filter(func (t): return map.has_bomb(t)))
-	var visible_bombs = map.get_bombs().filter(func (b): return b.get_tile() in visible_bomb_tiles)
+	var all_bombs = map.get_bombs()
 
 	# Filter steps to never decrease effective distance to any bomb
 	var safe_steps: Array[Vector2i] = []
-	safe_steps.assign(possible_steps.filter(func (s): return is_safe_step(s, map_position, visible_bombs)))
+	safe_steps.assign(possible_steps.filter(func (s): return is_safe_step(s, map_position, all_bombs)))
 
-	if not visible_bombs.is_empty():
-		flee(visible_bombs, safe_steps)
+	# Check if we're in danger from any bomb
+	var in_danger = false
+	for bomb in all_bombs:
+		if bomb.in_danger_zone(map_position):
+			in_danger = true
+			break
+
+	if in_danger:
+		flee(possible_steps)
 		return
 	var visible_players: Array[Vector2i] = []
 	visible_players.assign(visible_tiles.filter(func (t): return map.has_player(t, player_id)))
@@ -218,37 +223,45 @@ func is_in_range(tile: Vector2i) -> bool:
 	var absy = abs(diff.y)
 	return max(absx, absy) <= bomb_range and min(absx, absy) == 0
 	
-func flee(visible_bombs: Array, possible_steps: Array[Vector2i]) -> void:
+func flee(possible_steps: Array[Vector2i]) -> void:
 	var map_position = terrain.local_to_map(position)
-	if visible_bombs.is_empty():
+	var all_bombs = map.get_bombs()
+
+	if all_bombs.is_empty():
 		return
 
-	# Calculate current position's min distance to bombs
-	var current_min_distance = INF
-	for bomb in visible_bombs:
-		var dist = map_position.distance_squared_to(bomb.get_tile())
-		if dist < current_min_distance:
-			current_min_distance = dist
+	# Include staying as an option
+	var all_options: Array[Vector2i] = [Vector2i(0, 0)]
+	all_options.append_array(possible_steps)
 
-	# Find steps that improve or maintain distance (prefer staying if moving is worse)
-	var best_steps: Array[Vector2i] = [Vector2i(0, 0)]  # staying is default
-	var best_min_distance = current_min_distance
+	# Filter to only steps that don't decrease effective distance to any bomb
+	var safe_options: Array[Vector2i] = []
+	for step in all_options:
+		if is_safe_step(step, map_position, all_bombs):
+			safe_options.append(step)
 
-	for step in possible_steps:
+	if safe_options.is_empty():
+		return
+
+	# Find steps that maximize minimum effective distance
+	var best_steps: Array[Vector2i] = []
+	var best_min_eff_dist: float = -INF
+
+	for step in safe_options:
 		var new_pos = map_position + step
-		var min_distance = INF
-		for bomb in visible_bombs:
-			var dist = new_pos.distance_squared_to(bomb.get_tile())
-			if dist < min_distance:
-				min_distance = dist
-		if min_distance > best_min_distance:
-			best_min_distance = min_distance
+		var min_eff_dist: float = INF
+		for bomb in all_bombs:
+			var eff_dist = bomb.get_effective_distance(new_pos)
+			if eff_dist < min_eff_dist:
+				min_eff_dist = eff_dist
+		if min_eff_dist > best_min_eff_dist:
+			best_min_eff_dist = min_eff_dist
 			best_steps = [step]
-		elif min_distance == best_min_distance:
+		elif min_eff_dist == best_min_eff_dist:
 			best_steps.append(step)
 
 	# Prefer directions where we can see further
-	var best_visibility = -1
+	var best_visibility: int = -1
 	var best_visibility_steps: Array[Vector2i] = []
 	for step in best_steps:
 		var visibility = get_visibility_in_direction(map_position, step)

@@ -12,7 +12,7 @@ var player_id: int
 @onready var movedown = "p%d_move_down" % player_id
 @onready var moveright = "p%d_move_right" % player_id
 @onready var moveleft = "p%d_move_left" % player_id
-@onready var place_bomb = "p%d_place_bomb" % player_id
+@onready var place_bomb_input = "p%d_place_bomb" % player_id
 
 @onready var map: Map = get_node("/root/Map")
 @onready var terrain := get_node("/root/Map/Terrain")
@@ -22,8 +22,9 @@ var max_bombs = 1
 var bomb_range = 1
 var orientation: Main.Orientation = Main.Orientation.DOWN
 var bottle_count = 0
-var died = false
 var pouch: Sprite2D
+var is_dead = false
+var is_ai: bool = false
 
 signal damage(new_lives)
 
@@ -51,11 +52,11 @@ func die() -> void:
 	tween.tween_property($Sprite2D, "scale", Vector2(1.5, 0.0), 0.3)
 	tween.tween_property($Sprite2D, "scale", Vector2(0.0, 0.0), 0.2)
 	add_to_results()
-	died = true
+	is_dead = true
 	queue_free()
 		
 func add_to_results() -> void:
-	if not died:
+	if not is_dead:
 		Main.result.push_front($Sprite2D.texture)
 
 func _init() -> void:
@@ -63,37 +64,63 @@ func _init() -> void:
 	
 func _ready() -> void:
 	get_node("/root/Map/Hud/Hud_p%d" %player_id).register_player(self)
+	if is_ai:
+		var timer = Timer.new()
+		add_child(timer)
+		timer.one_shot = false
+		timer.timeout.connect(random_action)
+		timer.wait_time = 0.5
+		timer.start()
 
 func _physics_process(delta: float) -> void:
 	var map_position = terrain.local_to_map(position)
-	move(map_position)
-	maybe_place_bomb(map_position)
-		
-func move(map_position: Vector2i) -> void:
+	if not is_ai:
+		action_move(map_position)
+		action_place_bomb(map_position)
+	
+func action_move(map_position: Vector2i) -> void:
 	var movedir: Vector2i = Vector2i(0, 0)
 	if Input.is_action_just_pressed(movedown):
 		movedir += Vector2i(0,1)
-		set_orientation(Main.Orientation.DOWN)
 	if Input.is_action_just_pressed(moveup):
 		movedir += Vector2i(0,-1)
-		set_orientation(Main.Orientation.UP)
 	if Input.is_action_just_pressed(moveright):
 		movedir += Vector2i(1,0)
-		set_orientation(Main.Orientation.RIGHT)
 	if Input.is_action_just_pressed(moveleft):
 		movedir += Vector2i(-1,0)
-		set_orientation(Main.Orientation.LEFT)
+	move(map_position, movedir)
 	
-	if movedir != Vector2i(0,0):
-		var new_tile = map_position + movedir
-		if not map.collides(new_tile):
-			var target_pos = terrain.map_to_local(new_tile)
-			map.get_node("sounds/walk").play()
-			set_position(target_pos)
-			consume_energy(new_tile)
-			consume_bottle(new_tile)
-		else:
-			map.get_node("sounds/wall").play()
+func random_action() -> void:
+	var map_position = terrain.local_to_map(position)
+	if randf() < 0.1:
+		place_bomb(map_position)
+	else:
+		var d = [Vector2i(-1, 0), Vector2i(1, 0), Vector2i(0, -1), Vector2i(0, 1)].pick_random()
+		move(map_position, d)
+		
+func move(map_position: Vector2i, direction: Vector2i) -> void:
+	if direction == Vector2i(0,0):
+		return
+	var o = orientation
+	if direction.x > 0:
+		o = Main.Orientation.RIGHT
+	elif direction.x < 0:
+		o = Main.Orientation.LEFT
+	if direction.y > 0:
+		o = Main.Orientation.DOWN
+	elif direction.y < 0:
+		o = Main.Orientation.UP
+	set_orientation(o)
+	
+	var new_tile = map_position + direction
+	if not map.collides(new_tile):
+		var target_pos = terrain.map_to_local(new_tile)
+		map.get_node("sounds/walk").play()
+		set_position(target_pos)
+		consume_energy(new_tile)
+		consume_bottle(new_tile)
+	else:
+		map.get_node("sounds/wall").play()
 		
 func set_orientation(o: Main.Orientation):
 	orientation = o
@@ -127,16 +154,18 @@ func consume_bottle(tile: Vector2i) -> void:
 			pouch = Sprite2D.new()
 			add_child(pouch)
 			pouch.texture = pouch_texture
-		
-func maybe_place_bomb(map_position: Vector2i) -> void:
-	if Input.is_action_just_pressed(place_bomb) and bomb_count() < max_bombs:
-		if bottle_count > 0:
-			bottle_count -= 1
-			map.throw_bomb(map_position, self)
-			if bottle_count == 0:
-				pouch.queue_free()
-		else:
-			map.spawn_bomb(map_position, self)
-		
+
+func action_place_bomb(map_position: Vector2i) -> void:
+	if Input.is_action_just_pressed(place_bomb_input) and bomb_count() < max_bombs:
+		place_bomb(map_position)
+			
+func place_bomb(map_position: Vector2i) -> void:
+	if bottle_count > 0:
+		bottle_count -= 1
+		map.throw_bomb(map_position, self)
+		if bottle_count == 0:
+			pouch.queue_free()
+	else:
+		map.spawn_bomb(map_position, self)
 func bomb_count() -> int:
 	return map.get_bombs().filter(func(b): return b.player_id == player_id).size()

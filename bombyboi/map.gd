@@ -37,7 +37,7 @@ var pink_energy_p = 0.5
 # Called when the node enters the scene tree for the first time.
 func _ready() -> void:
 	create_map()
-	place_players(Main.player_count)
+	place_players(Main.player_count, Main.ai_count)
 	$soundtrack.play()
 
 func create_map() -> void:
@@ -84,15 +84,17 @@ func set_tile(pos: Vector2i, type: int) -> void:
 func set_tile_to_empty(pos: Vector2i) -> void:
 	set_tile(pos, 1)
 	
-func place_players(players: int) -> void:
-	for player in players:
+func place_players(players: int, ais: int) -> void:
+	for player in players + ais:
+		var is_ai = player >= players
 		var pos = get_random_spawn()
-		create_player(get_random_player_id(), pos)
+		create_player(get_random_player_id(), pos, is_ai)
 		set_area(pos - Vector2i(0, 1), Vector2i(1, 3), 1)
 		set_area(pos - Vector2i(1, 0), Vector2i(3, 1), 1)
 		
-func create_player(player: int, pos: Vector2i) -> void:
+func create_player(player: int, pos: Vector2i, is_ai: bool) -> void:
 	var psc = player_scene.instantiate()
+	psc.is_ai = is_ai
 	psc.player_id = player + 1
 	psc.get_node("Sprite2D").texture = faces[player]
 	psc.set_position(player_layer.map_to_local(pos))
@@ -149,15 +151,7 @@ func throw_bomb(tile: Vector2i, player: Player) -> void:
 	var bomb: BombeInFlesche = bombe_in_flesche_scene.instantiate()
 	bombas.add_child(bomb)
 	bomb.location = tile
-	match player.orientation:
-		Main.Orientation.UP:
-			bomb.direction = Vector2i(0, -1)
-		Main.Orientation.DOWN:
-			bomb.direction = Vector2i(0, 1)
-		Main.Orientation.LEFT:
-			bomb.direction = Vector2i(-1, 0)
-		Main.Orientation.RIGHT:
-			bomb.direction = Vector2i(1, 0)
+	bomb.direction = Main.orientation_to_direction(player.orientation)
 	$sounds/bombe_in_flesche.play()
 	bomb.move()
 	
@@ -221,7 +215,7 @@ func player_exists(id: int) -> bool:
 func get_players() -> Array[Player]:
 	var players: Array[Player] = []
 	players.assign(get_tree().get_nodes_in_group("players"))
-	return players
+	return players.filter(func (p): return not p.is_dead)
 	
 func collides_player(tile: Vector2i) -> bool:
 	return find_player(tile) != null
@@ -247,5 +241,6 @@ func _process(delta: float) -> void:
 	if players.size() <= 1:
 		for player in players:
 			player.add_to_results()
+			player.is_dead = true
 		Main.load_map(Main.game_over.resource_path)
 	

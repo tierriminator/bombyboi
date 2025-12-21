@@ -6,6 +6,7 @@ var main_menu: PackedScene = preload("res://main_menu.tscn")
 
 
 var player_count: int
+var ai_count: int
 var starting_lives: int
 var result: Array
 
@@ -30,6 +31,18 @@ func load_map(map_path: String) -> void:
 	get_tree().change_scene_to_packed(
 		ResourceLoader.load_threaded_get(map_path)
 	)
+	
+func orientation_to_direction(o: Main.Orientation) -> Vector2i:
+	match o:
+		Main.Orientation.UP:
+			return Vector2i(0, -1)
+		Main.Orientation.DOWN:
+			return Vector2i(0, 1)
+		Main.Orientation.LEFT:
+			return Vector2i(-1, 0)
+		Main.Orientation.RIGHT:
+			return Vector2i(1, 0)
+	return Vector2i(0, 0)
 
 # Called when the node enters the scene tree for the first time.
 func _ready() -> void:

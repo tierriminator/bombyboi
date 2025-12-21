@@ -1,0 +1,10 @@
+[gd_scene load_steps=3 format=3 uid="uid://bm0gd6bukbbl2"]
+
+[ext_resource type="Texture2D" uid="uid://ctl6jrmddxjc8" path="res://Art/leeri_flesche.png" id="1_puaei"]
+[ext_resource type="Script" uid="uid://cx1cbqq3b1yxn" path="res://flesche.gd" id="1_rrfc5"]
+
+[node name="Node2D" type="Node2D"]
+script = ExtResource("1_rrfc5")
+
+[node name="Sprite2D" type="Sprite2D" parent="."]
+texture = ExtResource("1_puaei")

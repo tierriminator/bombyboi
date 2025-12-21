@@ -1,4 +1,4 @@
-[gd_scene load_steps=23 format=4 uid="uid://bnjvx3l80rsq1"]
+[gd_scene load_steps=24 format=4 uid="uid://bnjvx3l80rsq1"]
 
 [ext_resource type="Texture2D" uid="uid://dowvnmlh8syiv" path="res://Art/Basic_Tiles.png" id="1_c7s6e"]
 [ext_resource type="Script" uid="uid://dvynds7hjrh4m" path="res://map.gd" id="1_p5pve"]
@@ -7,6 +7,7 @@
 [ext_resource type="PackedScene" uid="uid://b3cuh18ivrsct" path="res://hud.tscn" id="3_iw27f"]
 [ext_resource type="PackedScene" uid="uid://cvknoetih88aq" path="res://energy.tscn" id="4_71pa8"]
 [ext_resource type="PackedScene" uid="uid://ufobg6dkpl5f" path="res://bomb.tscn" id="4_p5pve"]
+[ext_resource type="PackedScene" uid="uid://bm0gd6bukbbl2" path="res://flesche.tscn" id="5_a6rn7"]
 [ext_resource type="AudioStream" uid="uid://c52hij84wbdkc" path="res://Sounds/soundtrack.wav" id="8_05x41"]
 [ext_resource type="AudioStream" uid="uid://cwugvycb5wb8r" path="res://Sounds/die.wav" id="9_wbpbn"]
 [ext_resource type="AudioStream" uid="uid://cduv158xvdop5" path="res://Sounds/damage.wav" id="10_a6rn7"]
@@ -66,6 +67,7 @@ script = ExtResource("1_p5pve")
 player_scene = ExtResource("2_wijl4")
 bomb_scene = ExtResource("4_p5pve")
 energy_scene = ExtResource("4_71pa8")
+flesche_scene = ExtResource("5_a6rn7")
 
 [node name="Hud" parent="." instance=ExtResource("3_iw27f")]
 

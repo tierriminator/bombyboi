@@ -13,7 +13,11 @@ var walls = [
 	Vector2i(3, 1),
 	Vector2i(2, 2),
 	Vector2i(1, 3),
-	Vector2i(1, 4)
+	Vector2i(1, 4),
+	Vector2i(2, 5),
+	Vector2i(5, 2),
+	Vector2i(1, 6),
+	Vector2i(6, 1)
 ]
 
 var pink_energy_p = 0.5
@@ -25,6 +29,7 @@ var pink_energy_p = 0.5
 @export var player_scene: PackedScene
 @export var bomb_scene: PackedScene
 @export var energy_scene: PackedScene
+@export var flesche_scene: PackedScene
 
 
 
@@ -35,16 +40,33 @@ func _ready() -> void:
 	$soundtrack.play()
 
 func create_map() -> void:
-	for n in 20:
-		var segment = walls.pick_random()
-		var pos = Vector2i(randi_range(1, 13), randi_range(1, 3))
-		set_area(pos, segment  + Vector2i(2, 2), 1)
-		set_area(pos + Vector2i(1, 1), segment, 0)
+	var spawned_walls = 0
+	while(spawned_walls < 20):
+		var pos = Vector2i(randi_range(1, 18), randi_range(1, 8))
+		if get_free_neighbours(pos) > 2:
+			spawn_wall(pos)
+			spawned_walls += 1
+			
 	for x in 20:
 		for y in 10:
 			var pos = Vector2i(x, y)
 			if get_type(pos) == 1 and randf() < 0.5:
 				set_tile(pos, 2)
+				
+func spawn_wall(start: Vector2i, steps = 0) -> void:
+	set_tile(start, 0)
+	if steps < 7:
+		var next = Vector2i(start.x + [-1, 1].pick_random(), start.y + [-1, 1].pick_random())
+		if get_free_neighbours(next) > 2:
+			spawn_wall(next, steps + 1)
+	
+func get_free_neighbours(pos: Vector2i) -> int:
+	var count = 0
+	for x in [-1, 1]:
+		for y in [-1, 1]:
+			if get_type(pos + Vector2i(x, y)) == 1:
+				count += 1
+	return count
 				
 func get_type(pos: Vector2i) -> int:
 	return terrain.get_cell_atlas_coords(pos).y
@@ -121,6 +143,28 @@ func spawn_bomb(tile: Vector2i, player: Player) -> void:
 	bomb.explosion_range = player.bomb_range
 	bombas.add_child(bomb)
 	$sounds/place_bomb.play()
+	
+func spawn_item(tile: Vector2i) -> void:
+	if randf() < 0.1:
+		spawn_bottle(tile)
+	else:
+		spawn_energy(tile)
+		
+func get_bottles() -> Array[Bottle]:
+	var bottles: Array[Bottle] = []
+	bottles.assign(get_tree().get_nodes_in_group("bottles"))
+	return bottles
+	
+func find_bottle(tile: Vector2i) -> Bottle:
+	for bottle in get_bottles():
+		if bombas.local_to_map(bottle.position) == tile:
+			return bottle
+	return null
+		
+func spawn_bottle(tile: Vector2i) -> void:
+	var flesche = flesche_scene.instantiate()
+	flesche.position = bombas.map_to_local(tile)
+	bombas.add_child(flesche)
 	
 func get_energies() -> Array[Energy]:
 	var energies: Array[Energy] = []

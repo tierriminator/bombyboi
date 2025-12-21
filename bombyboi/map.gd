@@ -29,6 +29,7 @@ var pink_energy_p = 0.5
 @export var player_scene: PackedScene
 @export var bomb_scene: PackedScene
 @export var energy_scene: PackedScene
+@export var flesche_scene: PackedScene
 
 
 
@@ -142,6 +143,28 @@ func spawn_bomb(tile: Vector2i, player: Player) -> void:
 	bomb.explosion_range = player.bomb_range
 	bombas.add_child(bomb)
 	$sounds/place_bomb.play()
+	
+func spawn_item(tile: Vector2i) -> void:
+	if randf() < 0.1:
+		spawn_bottle(tile)
+	else:
+		spawn_energy(tile)
+		
+func get_bottles() -> Array[Bottle]:
+	var bottles: Array[Bottle] = []
+	bottles.assign(get_tree().get_nodes_in_group("bottles"))
+	return bottles
+	
+func find_bottle(tile: Vector2i) -> Bottle:
+	for bottle in get_bottles():
+		if bombas.local_to_map(bottle.position) == tile:
+			return bottle
+	return null
+		
+func spawn_bottle(tile: Vector2i) -> void:
+	var flesche = flesche_scene.instantiate()
+	flesche.position = bombas.map_to_local(tile)
+	bombas.add_child(flesche)
 	
 func get_energies() -> Array[Energy]:
 	var energies: Array[Energy] = []

@@ -115,7 +115,7 @@ func ai_action() -> void:
 		return
 	var visible_players: Array[Vector2i] = []
 	visible_players.assign(visible_tiles.filter(func (t): return map.has_player(t, player_id)))
-	if not visible_players.is_empty() and randf() < 0.5 and bomb_count() > 0:
+	if not visible_players.is_empty() and can_place_bomb():
 		attack_players(visible_players, safe_steps)
 		return
 

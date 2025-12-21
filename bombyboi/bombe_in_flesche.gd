@@ -25,6 +25,7 @@ func move() -> void:
 	var new_location = location + direction
 	if map.tile_collides(new_location) or map.collides_player(new_location):
 		move_timer.stop()
+		location = new_location
 		_on_explode()
 	else:
 		location = new_location

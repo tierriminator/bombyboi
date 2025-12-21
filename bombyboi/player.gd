@@ -337,7 +337,7 @@ func move(map_position: Vector2i, direction: Vector2i) -> void:
 	elif direction.y < 0:
 		o = Main.Orientation.UP
 	set_orientation(o)
-	
+
 	var new_tile = map_position + direction
 	if not map.collides(new_tile):
 		var target_pos = terrain.map_to_local(new_tile)

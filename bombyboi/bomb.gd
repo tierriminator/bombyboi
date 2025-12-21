@@ -3,7 +3,6 @@ extends BaseBomb
 class_name Bomb
 
 var live_seconds = 2.0
-var player_id: int
 
 func _ready() -> void:
 	super._ready()

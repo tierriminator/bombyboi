@@ -6,6 +6,7 @@ var explosion_texture: Texture2D = preload("res://Art/explosion.png")
 var explosion_seconds = 0.5
 var explosion_sprites: Array[Sprite2D] = []
 var explosion_range: int = 1
+var player_id: int
 
 var sprite: Sprite2D
 

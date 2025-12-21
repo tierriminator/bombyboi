@@ -126,8 +126,8 @@ func collides(tile: Vector2i) -> bool:
 	var tile_data = terrain.get_cell_tile_data(tile)
 	return tile_data.get_custom_data("has_collision") or has_bomb(tile)
 	
-func get_bombs() -> Array[Bomb]:
-	var bombs: Array[Bomb] = []
+func get_bombs() -> Array[BaseBomb]:
+	var bombs: Array[BaseBomb] = []
 	bombs.assign(get_tree().get_nodes_in_group("bombs"))
 	return bombs
 	
@@ -151,6 +151,7 @@ func spawn_bomb(tile: Vector2i, player: Player) -> void:
 func throw_bomb(tile: Vector2i, player: Player) -> void:
 	var bomb: BombeInFlesche = bombe_in_flesche_scene.instantiate()
 	bombas.add_child(bomb)
+	bomb.player_id = player.player_id
 	bomb.location = tile
 	bomb.direction = Main.orientation_to_direction(player.orientation)
 	$sounds/bombe_in_flesche.play()

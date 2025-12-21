@@ -3,7 +3,6 @@ extends CharacterBody2D
 class_name Player
 
 var bomb_scene: PackedScene = preload("res://bomb.tscn")
-var death_scene: PackedScene = preload("res://game_over.tscn")
 
 var player_id: int
 
@@ -46,15 +45,11 @@ func die() -> void:
 	var tween = create_tween()
 	tween.tween_property($Sprite2D, "scale", Vector2(1.5, 0.0), 0.3)
 	tween.tween_property($Sprite2D, "scale", Vector2(0.0, 0.0), 0.2)
-	Main.result[Main.remaining_player_count] = $Sprite2D.texture
-	Main.remaining_player_count -= 1
+	add_to_results()
 	queue_free()
-	if Main.remaining_player_count == 1:
-		for i in get_node("/root/Map/Players").get_children():
-			if i != self:
-				i.die()
-	elif Main.remaining_player_count == 0:
-		Main.load_map(death_scene.resource_path)
+		
+func add_to_results() -> void:
+	Main.result.push_front($Sprite2D.texture)
 
 func _init() -> void:
 	add_to_group("players")

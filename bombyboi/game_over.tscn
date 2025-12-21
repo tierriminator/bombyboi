@@ -1,7 +1,7 @@
 [gd_scene load_steps=5 format=3 uid="uid://cdvf4fos1su6"]
 
 [ext_resource type="Texture2D" uid="uid://lq0yqdxrhfqg" path="res://Art/podest.png" id="1_y26ei"]
-[ext_resource type="Script" path="res://game_over.gd" id="1_yxx3c"]
+[ext_resource type="Script" uid="uid://du28ui5i20sge" path="res://game_over.gd" id="1_yxx3c"]
 [ext_resource type="AudioStream" uid="uid://c4ho8mw4ldod7" path="res://Sounds/episch.wav" id="3_ccer4"]
 
 [sub_resource type="LabelSettings" id="LabelSettings_xapjj"]

@@ -20,6 +20,7 @@ var max_bombs = 1
 var bomb_range = 1
 var orientation: Main.Orientation = Main.Orientation.DOWN
 var bottle_count = 0
+var died = false
 
 signal damage(new_lives)
 
@@ -47,10 +48,12 @@ func die() -> void:
 	tween.tween_property($Sprite2D, "scale", Vector2(1.5, 0.0), 0.3)
 	tween.tween_property($Sprite2D, "scale", Vector2(0.0, 0.0), 0.2)
 	add_to_results()
+	died = true
 	queue_free()
 		
 func add_to_results() -> void:
-	Main.result.push_front($Sprite2D.texture)
+	if not died:
+		Main.result.push_front($Sprite2D.texture)
 
 func _init() -> void:
 	add_to_group("players")

@@ -159,6 +159,7 @@ func throw_bomb(tile: Vector2i, player: Player) -> void:
 		Main.Orientation.RIGHT:
 			bomb.direction = Vector2i(1, 0)
 	$sounds/bombe_in_flesche.play()
+	bomb.move()
 	
 func spawn_item(tile: Vector2i) -> void:
 	if randf() < Main.SPAWN_BOTTLE_P:

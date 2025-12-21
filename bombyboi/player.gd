@@ -164,7 +164,7 @@ func attack_targets_with_bottle(targets: Array[Vector2i], possible_steps: Array[
 	for target_tile in targets:
 		var diff = target_tile - map_position
 		var dist = abs(diff.x) + abs(diff.y)
-		if dist >= 3 and is_facing(target_tile, map_position):
+		if dist >= 2 and is_facing(target_tile, map_position):
 			place_bomb(map_position)
 			return
 
@@ -172,7 +172,7 @@ func attack_targets_with_bottle(targets: Array[Vector2i], possible_steps: Array[
 	for target_tile in targets:
 		var diff = target_tile - map_position
 		var dist = abs(diff.x) + abs(diff.y)
-		if dist >= 4:
+		if dist >= 3:
 			far_targets.append(target_tile)
 
 	if not far_targets.is_empty():

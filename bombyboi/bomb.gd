@@ -33,16 +33,11 @@ func explode_tiles() -> void:
 	for dir in directions:
 		for i in range(1, explosion_range + 1):
 			var current = bomb_tile + dir * i
-			var tile_data = terrain.get_cell_tile_data(current)
-			if tile_data == null:
-				break
-			var collides = tile_data.get_custom_data("has_collision")
-			var explodes = tile_data.get_custom_data("can_explode")
-			if collides and not explodes:
+			var explodes = map.tile_explodes(current)
+			if map.tile_collides(current) and not explodes:
 				break
 			explode_tile(current)
 			if explodes:
-				maybe_spawn_item(current)
 				break
 			
 	

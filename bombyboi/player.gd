@@ -120,7 +120,11 @@ func consume_bottle(tile: Vector2i) -> void:
 		
 func maybe_place_bomb(map_position: Vector2i) -> void:
 	if Input.is_action_just_pressed(place_bomb) and bomb_count() < max_bombs:
-		map.spawn_bomb(map_position, self)
+		if bottle_count > 0:
+			bottle_count -= 1
+			map.throw_bomb(map_position, self)
+		else:
+			map.spawn_bomb(map_position, self)
 		
 func bomb_count() -> int:
 	return map.get_bombs().filter(func(b): return b.player_id == player_id).size()

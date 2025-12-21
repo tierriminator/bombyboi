@@ -12,6 +12,7 @@ var result: Array
 
 var ENERGY_SPAWN_P = 0.3
 var PINK_ENERGY_P = 0.2
+var SPAWN_BOTTLE_P = 1
 
 enum EnergyType { GREEN, PINK }
 

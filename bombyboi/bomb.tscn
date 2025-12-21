@@ -1,10 +1,10 @@
 [gd_scene load_steps=3 format=3 uid="uid://ufobg6dkpl5f"]
 
 [ext_resource type="Script" uid="uid://bt6b1uixkn2ko" path="res://bomb.gd" id="1_4fn8o"]
-[ext_resource type="Texture2D" uid="uid://dehxl447r3n8" path="res://Art/bomba.png" id="1_573fp"]
+[ext_resource type="Texture2D" uid="uid://byt51c4tg83o8" path="res://Art/big_bomba.png" id="2_4fn8o"]
 
 [node name="Node2D" type="Node2D"]
 script = ExtResource("1_4fn8o")
 
 [node name="Sprite2D" type="Sprite2D" parent="."]
-texture = ExtResource("1_573fp")
+texture = ExtResource("2_4fn8o")

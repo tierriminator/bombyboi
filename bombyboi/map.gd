@@ -28,6 +28,7 @@ var pink_energy_p = 0.5
 
 @export var player_scene: PackedScene
 @export var bomb_scene: PackedScene
+@export var bombe_in_flesche_scene: PackedScene
 @export var energy_scene: PackedScene
 @export var flesche_scene: PackedScene
 
@@ -144,8 +145,23 @@ func spawn_bomb(tile: Vector2i, player: Player) -> void:
 	bombas.add_child(bomb)
 	$sounds/place_bomb.play()
 	
+func throw_bomb(tile: Vector2i, player: Player) -> void:
+	var bomb: BombeInFlesche = bombe_in_flesche_scene.instantiate()
+	bombas.add_child(bomb)
+	bomb.location = tile
+	match player.orientation:
+		Main.Orientation.UP:
+			bomb.direction = Vector2i(0, -1)
+		Main.Orientation.DOWN:
+			bomb.direction = Vector2i(0, 1)
+		Main.Orientation.LEFT:
+			bomb.direction = Vector2i(-1, 0)
+		Main.Orientation.RIGHT:
+			bomb.direction = Vector2i(1, 0)
+	$sounds/bombe_in_flesche.play()
+	
 func spawn_item(tile: Vector2i) -> void:
-	if randf() < 0.1:
+	if randf() < Main.SPAWN_BOTTLE_P:
 		spawn_bottle(tile)
 	else:
 		spawn_energy(tile)
@@ -189,6 +205,12 @@ func spawn_energy(tile: Vector2i) -> void:
 	energy.position = bombas.map_to_local(tile)
 	bombas.add_child(energy)
 	
+func find_player(tile: Vector2i) -> Player:
+	for player in get_players():
+		if terrain.local_to_map(player.position) == tile:
+			return player
+	return null
+	
 func player_exists(id: int) -> bool:
 	for player in get_tree().get_nodes_in_group("players"):
 		if (player.player_id == id):
@@ -200,6 +222,24 @@ func get_players() -> Array[Player]:
 	players.assign(get_tree().get_nodes_in_group("players"))
 	return players
 	
+func collides_player(tile: Vector2i) -> bool:
+	return find_player(tile) != null
+	
+func tile_collides(tile: Vector2i) -> bool:
+	var tile_data = get_tile_data(tile)
+	if tile_data == null:
+		return false
+	return tile_data.get_custom_data("has_collision")
+	
+func tile_explodes(tile: Vector2i) -> bool:
+	var tile_data = get_tile_data(tile)
+	if tile_data == null:
+		return false
+	return tile_data.get_custom_data("can_explode")
+	
+func get_tile_data(tile: Vector2i) -> TileData:
+	return terrain.get_cell_tile_data(tile)
+
 # Called every frame. 'delta' is the elapsed time since the previous frame.
 func _process(delta: float) -> void:
 	var players = get_players()

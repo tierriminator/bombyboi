@@ -31,6 +31,8 @@ var pink_energy_p = 0.5
 @export var energy_scene: PackedScene
 @export var flesche_scene: PackedScene
 
+var death_scene: PackedScene = preload("res://game_over.tscn")
+
 
 
 # Called when the node enters the scene tree for the first time.
@@ -194,6 +196,17 @@ func player_exists(id: int) -> bool:
 		if (player.player_id == id):
 			return true
 	return false
+	
+func get_players() -> Array[Player]:
+	var players: Array[Player] = []
+	players.assign(get_tree().get_nodes_in_group("players"))
+	return players
+	
 # Called every frame. 'delta' is the elapsed time since the previous frame.
 func _process(delta: float) -> void:
-	pass
+	var players = get_players()
+	if players.size() <= 1:
+		for player in players:
+			player.add_to_results()
+		Main.load_map(death_scene.resource_path)
+	

@@ -92,10 +92,14 @@ func action_move(map_position: Vector2i) -> void:
 	
 func random_action() -> void:
 	var map_position = terrain.local_to_map(position)
-	if randf() < 0.1:
+	if randf() < 0.1 and can_place_bomb():
 		place_bomb(map_position)
 	else:
-		var d = [Vector2i(-1, 0), Vector2i(1, 0), Vector2i(0, -1), Vector2i(0, 1)].pick_random()
+		var d: Vector2i
+		for i in 10:
+			d = [Vector2i(-1, 0), Vector2i(1, 0), Vector2i(0, -1), Vector2i(0, 1)].pick_random()
+			if not map.collides(map_position + d):
+				break
 		move(map_position, d)
 		
 func move(map_position: Vector2i, direction: Vector2i) -> void:
@@ -154,18 +158,22 @@ func consume_bottle(tile: Vector2i) -> void:
 			pouch = Sprite2D.new()
 			add_child(pouch)
 			pouch.texture = pouch_texture
+			
+func can_place_bomb() -> bool:
+	return bomb_count() < max_bombs
 
 func action_place_bomb(map_position: Vector2i) -> void:
-	if Input.is_action_just_pressed(place_bomb_input) and bomb_count() < max_bombs:
+	if Input.is_action_just_pressed(place_bomb_input):
 		place_bomb(map_position)
 			
 func place_bomb(map_position: Vector2i) -> void:
-	if bottle_count > 0:
-		bottle_count -= 1
-		map.throw_bomb(map_position, self)
-		if bottle_count == 0:
-			pouch.queue_free()
-	else:
-		map.spawn_bomb(map_position, self)
+	if can_place_bomb():
+		if bottle_count > 0:
+			bottle_count -= 1
+			map.throw_bomb(map_position, self)
+			if bottle_count == 0:
+				pouch.queue_free()
+		else:
+			map.spawn_bomb(map_position, self)
 func bomb_count() -> int:
 	return map.get_bombs().filter(func(b): return b.player_id == player_id).size()

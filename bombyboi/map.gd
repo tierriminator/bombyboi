@@ -85,18 +85,21 @@ func set_tile_to_empty(pos: Vector2i) -> void:
 	set_tile(pos, 1)
 	
 func place_players(players: int, ais: int) -> void:
+	var available_characters = range(players+ais)
 	for player in players + ais:
 		var is_ai = player >= players
 		var pos = get_random_spawn()
-		create_player(get_random_player_id(), pos, is_ai)
+		var character = available_characters.pick_random()
+		create_player(player, character, pos, is_ai)
+		available_characters.remove_at(available_characters.find(character))
 		set_area(pos - Vector2i(0, 1), Vector2i(1, 3), 1)
 		set_area(pos - Vector2i(1, 0), Vector2i(3, 1), 1)
 		
-func create_player(player: int, pos: Vector2i, is_ai: bool) -> void:
+func create_player(player: int, character: int, pos: Vector2i, is_ai: bool) -> void:
 	var psc = player_scene.instantiate()
 	psc.is_ai = is_ai
 	psc.player_id = player + 1
-	psc.get_node("Sprite2D").texture = faces[player]
+	psc.get_node("Sprite2D").texture = faces[character]
 	psc.set_position(player_layer.map_to_local(pos))
 	player_layer.add_child(psc)
 		
@@ -115,13 +118,7 @@ func has_player(pos: Vector2i, except_id: int = -1) -> bool:
 		if player.player_id != except_id:
 			return terrain.local_to_map(player.position) == pos
 	return false
-	
-func get_random_player_id() -> int:
-	var id = randi_range(0, 2)
-	while player_exists(id + 1):
-		id = (id + 1) % 3
-	return id
-	
+		
 func collides(tile: Vector2i) -> bool:
 	var tile_data = terrain.get_cell_tile_data(tile)
 	return tile_data.get_custom_data("has_collision") or has_bomb(tile)

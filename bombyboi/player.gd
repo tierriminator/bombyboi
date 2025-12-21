@@ -8,11 +8,11 @@ var bomb_scene: PackedScene = preload("res://bomb.tscn")
 
 var player_id: int
 
-@onready var moveup = "p%d_move_up" % player_id
-@onready var movedown = "p%d_move_down" % player_id
-@onready var moveright = "p%d_move_right" % player_id
-@onready var moveleft = "p%d_move_left" % player_id
-@onready var place_bomb_input = "p%d_place_bomb" % player_id
+var moveup: String
+var movedown: String
+var moveright: String
+var moveleft: String
+var place_bomb_input: String
 
 @onready var map: Map = get_node("/root/Map")
 @onready var terrain := get_node("/root/Map/Terrain")
@@ -64,6 +64,14 @@ func _init() -> void:
 	
 func _ready() -> void:
 	get_node("/root/Map/Hud/Hud_p%d" %player_id).register_player(self)
+	moveup = "p%d_move_up" % player_id
+	movedown = "p%d_move_down" % player_id
+	moveright = "p%d_move_right" % player_id
+	moveleft = "p%d_move_left" % player_id
+	if player_id == 1 and Main.player_count < 3:
+		place_bomb_input = "p3_place_bomb"
+	else:
+		place_bomb_input = "p%d_place_bomb" % player_id
 	if is_ai:
 		var timer = Timer.new()
 		add_child(timer)

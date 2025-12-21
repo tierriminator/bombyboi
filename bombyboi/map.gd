@@ -31,8 +31,6 @@ var pink_energy_p = 0.5
 @export var energy_scene: PackedScene
 @export var flesche_scene: PackedScene
 
-var death_scene: PackedScene = preload("res://game_over.tscn")
-
 
 
 # Called when the node enters the scene tree for the first time.
@@ -208,5 +206,5 @@ func _process(delta: float) -> void:
 	if players.size() <= 1:
 		for player in players:
 			player.add_to_results()
-		Main.load_map(death_scene.resource_path)
+		Main.load_map(Main.game_over.resource_path)
 	

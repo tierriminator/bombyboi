@@ -1,8 +1,5 @@
 extends Control
 
-
-var main_menu: PackedScene = preload("res://main_menu.tscn")
-
 # Called when the node enters the scene tree for the first time.
 func _ready() -> void:
 	$AudioStreamPlayer.play()
@@ -16,4 +13,5 @@ func _process(delta: float) -> void:
 
 
 func _on_button_pressed() -> void:
-	Main.load_map(main_menu.resource_path)
+	Main.load_map(Main.main_menu.resource_path)
+	pass

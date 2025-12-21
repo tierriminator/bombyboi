@@ -1,5 +1,10 @@
 extends Node
 
+var map: PackedScene = preload("res://map.tscn")
+var game_over: PackedScene = preload("res://game_over.tscn")
+var main_menu: PackedScene = preload("res://main_menu.tscn")
+
+
 var player_count: int
 var starting_lives: int
 var remaining_player_count: int

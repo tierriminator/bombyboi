@@ -42,7 +42,7 @@ func _ready() -> void:
 
 func create_map() -> void:
 	var spawned_walls = 0
-	while(spawned_walls < 20):
+	while(spawned_walls < Main.MAPGEN_WALLS):
 		var pos = Vector2i(randi_range(1, 18), randi_range(1, 8))
 		if get_free_neighbours(pos) > 2:
 			spawn_wall(pos)
@@ -56,7 +56,7 @@ func create_map() -> void:
 				
 func spawn_wall(start: Vector2i, steps = 0) -> void:
 	set_tile(start, 0)
-	if steps < 7:
+	if steps < Main.MAPGEN_WALL_LENGTH:
 		var next = Vector2i(start.x + [-1, 1].pick_random(), start.y + [-1, 1].pick_random())
 		if get_free_neighbours(next) > 2:
 			spawn_wall(next, steps + 1)

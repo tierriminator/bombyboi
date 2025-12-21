@@ -2,6 +2,8 @@ extends CharacterBody2D
 
 class_name Player
 
+var pouch_texture: Texture2D = preload("res://Art/pouch.png")
+
 var bomb_scene: PackedScene = preload("res://bomb.tscn")
 
 var player_id: int
@@ -21,6 +23,7 @@ var bomb_range = 1
 var orientation: Main.Orientation = Main.Orientation.DOWN
 var bottle_count = 0
 var died = false
+var pouch: Sprite2D
 
 signal damage(new_lives)
 
@@ -96,13 +99,13 @@ func set_orientation(o: Main.Orientation):
 	orientation = o
 	match o:
 		Main.Orientation.DOWN:
-			$Sprite2D.rotation = 0
+			self.rotation = 0
 		Main.Orientation.UP:
-			$Sprite2D.rotation = PI
+			self.rotation = PI
 		Main.Orientation.RIGHT:
-			$Sprite2D.rotation = -PI / 2
+			self.rotation = -PI / 2
 		Main.Orientation.LEFT:
-			$Sprite2D.rotation = PI / 2
+			self.rotation = PI / 2
 		
 func consume_energy(tile: Vector2i) -> void:
 	var energy = map.find_energy(tile)
@@ -120,12 +123,18 @@ func consume_bottle(tile: Vector2i) -> void:
 	if bottle:
 		bottle_count += 1
 		bottle.queue_free()
+		if bottle_count == 1:
+			pouch = Sprite2D.new()
+			add_child(pouch)
+			pouch.texture = pouch_texture
 		
 func maybe_place_bomb(map_position: Vector2i) -> void:
 	if Input.is_action_just_pressed(place_bomb) and bomb_count() < max_bombs:
 		if bottle_count > 0:
 			bottle_count -= 1
 			map.throw_bomb(map_position, self)
+			if bottle_count == 0:
+				pouch.queue_free()
 		else:
 			map.spawn_bomb(map_position, self)
 		

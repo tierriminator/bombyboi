@@ -1,19 +1,10 @@
-[gd_scene load_steps=4 format=3 uid="uid://ufobg6dkpl5f"]
+[gd_scene load_steps=3 format=3 uid="uid://ufobg6dkpl5f"]
 
 [ext_resource type="Script" uid="uid://bt6b1uixkn2ko" path="res://bomb.gd" id="1_4fn8o"]
 [ext_resource type="Texture2D" uid="uid://dehxl447r3n8" path="res://Art/bomba.png" id="1_573fp"]
 
-[sub_resource type="RectangleShape2D" id="RectangleShape2D_573fp"]
-size = Vector2(51, 60)
-
-[node name="StaticBody2D" type="StaticBody2D"]
+[node name="Node2D" type="Node2D"]
 script = ExtResource("1_4fn8o")
-
-[node name="CollisionShape2D" type="CollisionShape2D" parent="."]
-position = Vector2(1.5, 1)
-shape = SubResource("RectangleShape2D_573fp")
 
 [node name="Sprite2D" type="Sprite2D" parent="."]
 texture = ExtResource("1_573fp")
-
-[node name="Timer" type="Timer" parent="."]

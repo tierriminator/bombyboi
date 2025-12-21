@@ -19,6 +19,7 @@ var player_id: int
 var max_bombs = 1
 var bomb_range = 1
 var orientation: Main.Orientation = Main.Orientation.DOWN
+var bottle_count = 0
 
 signal damage(new_lives)
 
@@ -84,6 +85,7 @@ func move(map_position: Vector2i) -> void:
 			map.get_node("sounds/walk").play()
 			set_position(target_pos)
 			consume_energy(new_tile)
+			consume_bottle(new_tile)
 		else:
 			map.get_node("sounds/wall").play()
 		
@@ -109,6 +111,12 @@ func consume_energy(tile: Vector2i) -> void:
 				max_bombs += 1
 		map.get_node("sounds/glugg").play()
 		energy.queue_free()
+		
+func consume_bottle(tile: Vector2i) -> void:
+	var bottle = map.find_bottle(tile)
+	if bottle:
+		bottle_count += 1
+		bottle.queue_free()
 		
 func maybe_place_bomb(map_position: Vector2i) -> void:
 	if Input.is_action_just_pressed(place_bomb) and bomb_count() < max_bombs:

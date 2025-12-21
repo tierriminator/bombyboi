@@ -1,34 +1,21 @@
-extends StaticBody2D
+extends BaseBomb
 
 class_name Bomb
 
-var explosion_texture: Texture2D = preload("res://Art/explosion.png")
 var live_seconds = 2.0
-var explosion_seconds = 0.5
 var explosion_range = 3
-var explosion_sprites: Array[Sprite2D] = []
 var player_id: int
 
-@onready var terrain = get_node("/root/Map/Terrain")
-@onready var map = get_node("/root/Map")
-
 func _ready() -> void:
+	super._ready()
+	sprite = $Sprite2D
 	add_to_group("bombs")
-	$Timer.wait_time = live_seconds
-	$Timer.one_shot = true
-	$Timer.timeout.connect(_on_explode)
-	$Timer.start()
-
-func _on_explode() -> void:
-	$Sprite2D.texture = explosion_texture
-	$CollisionShape2D.set_deferred("disabled", true)
-
-	explode_tiles()
-
-	$Timer.wait_time = explosion_seconds
-	$Timer.timeout.disconnect(_on_explode)
-	$Timer.timeout.connect(_on_explosion_finished)
-	$Timer.start()
+	var live_timer = Timer.new()
+	add_child(live_timer)
+	live_timer.wait_time = live_seconds
+	live_timer.one_shot = true
+	live_timer.timeout.connect(_on_explode)
+	live_timer.start()
 
 func explode_tiles() -> void:
 	var bomb_tile = terrain.local_to_map(position)
@@ -58,31 +45,7 @@ func explode_tiles() -> void:
 				maybe_spawn_item(current)
 				break
 			
-
-func explode_tile(tile: Vector2i):
-	spawn_explosion_sprite(tile)
-	damage_players(tile)
-	map.set_tile_to_empty(tile)
 	
 func maybe_spawn_item(tile: Vector2i):
 	if randf() < Main.ENERGY_SPAWN_P:
 		map.spawn_energy(tile)
-
-func spawn_explosion_sprite(tile: Vector2i) -> void:
-	var sprite = Sprite2D.new()
-	sprite.texture = explosion_texture
-	sprite.position = terrain.map_to_local(tile)
-	get_parent().add_child(sprite)
-	explosion_sprites.append(sprite)
-
-func damage_players(explosion_tile: Vector2i) -> void:
-	if get_tree():
-		for player in get_tree().get_nodes_in_group("players"):
-			var player_tile = terrain.local_to_map(player.position)
-			if player_tile == explosion_tile:
-				player.lives = max(player.lives - 1, 0)
-
-func _on_explosion_finished() -> void:
-	for sprite in explosion_sprites:
-		sprite.queue_free()
-	queue_free()

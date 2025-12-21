@@ -7,12 +7,11 @@ var main_menu: PackedScene = preload("res://main_menu.tscn")
 
 var player_count: int
 var starting_lives: int
-var remaining_player_count: int
 var result: Array
 
 var ENERGY_SPAWN_P = 0.3
-var PINK_ENERGY_P = 0.2
-var SPAWN_BOTTLE_P = 1
+var PINK_ENERGY_P = 0.3
+var SPAWN_BOTTLE_P = 0.2
 
 var BOMBE_IN_FLESCHE_MOVE_FREQ = 0.2
 

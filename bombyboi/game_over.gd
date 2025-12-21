@@ -5,6 +5,7 @@ func _ready() -> void:
 	$AudioStreamPlayer.play()
 	for player in Main.result.size():
 		get_node("place_%d" % (player+1)).texture = Main.result[player] 
+	Main.result = []
 
 
 # Called every frame. 'delta' is the elapsed time since the previous frame.

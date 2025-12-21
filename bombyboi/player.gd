@@ -50,10 +50,11 @@ func die() -> void:
 	Main.remaining_player_count -= 1
 	queue_free()
 	if Main.remaining_player_count == 1:
-		get_node("/root/Map/Players").get_child(1).die()
+		for i in get_node("/root/Map/Players").get_children():
+			if i != self:
+				i.die()
 	elif Main.remaining_player_count == 0:
-		#Main.load_map(death_scene.resource_path)
-		pass
+		Main.load_map(death_scene.resource_path)
 
 func _init() -> void:
 	add_to_group("players")

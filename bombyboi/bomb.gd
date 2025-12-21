@@ -74,10 +74,11 @@ func spawn_explosion_sprite(tile: Vector2i) -> void:
 	explosion_sprites.append(sprite)
 
 func damage_players(explosion_tile: Vector2i) -> void:
-	for player in get_tree().get_nodes_in_group("players"):
-		var player_tile = terrain.local_to_map(player.position)
-		if player_tile == explosion_tile:
-			player.lives = max(player.lives - 1, 0)
+	if get_tree():
+		for player in get_tree().get_nodes_in_group("players"):
+			var player_tile = terrain.local_to_map(player.position)
+			if player_tile == explosion_tile:
+				player.lives = max(player.lives - 1, 0)
 
 func _on_explosion_finished() -> void:
 	for sprite in explosion_sprites:

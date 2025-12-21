@@ -127,8 +127,8 @@ func ai_action() -> void:
 		var step = get_step_towards(target, map_position)
 		if step in safe_steps:
 			move(map_position, step)
-		elif not safe_steps.is_empty():
-			move(map_position, safe_steps.pick_random())
+		else:
+			random_step(safe_steps)
 		return
 
 	# Attack rocks
@@ -139,8 +139,7 @@ func ai_action() -> void:
 		return
 
 	# Random step
-	if not safe_steps.is_empty():
-		move(map_position, safe_steps.pick_random())
+	random_step(safe_steps)
 
 func attack_targets(targets: Array[Vector2i], possible_steps: Array[Vector2i], map_position: Vector2i) -> void:
 	if bottle_count == 0:
@@ -189,9 +188,9 @@ func attack_targets_with_bottle(targets: Array[Vector2i], possible_steps: Array[
 				break
 
 	if not escape_steps.is_empty():
-		move(map_position, escape_steps.pick_random())
-	elif not possible_steps.is_empty():
-		move(map_position, possible_steps.pick_random())
+		random_step(escape_steps)
+	else:
+		random_step(possible_steps)
 
 func get_closest_tile(tiles: Array[Vector2i], from: Vector2i) -> Vector2i:
 	var closest = tiles[0]
@@ -271,7 +270,7 @@ func flee(possible_steps: Array[Vector2i]) -> void:
 		elif visibility == best_visibility:
 			best_visibility_steps.append(step)
 
-	move(map_position, best_visibility_steps.pick_random())
+	random_step(best_visibility_steps)
 
 func get_visibility_in_direction(from: Vector2i, direction: Vector2i) -> int:
 	if direction == Vector2i(0, 0):
@@ -324,6 +323,16 @@ func is_facing(target: Vector2i, from: Vector2i) -> bool:
 	else:
 		return sign(diff.y) == dir.y and diff.x == 0
 		
+func random_step(steps: Array[Vector2i]) -> void:
+	if steps.is_empty():
+		return
+	var map_position = terrain.local_to_map(position)
+	var orientation_dir = get_orientation_vector()
+	if orientation_dir in steps and randf() < 0.5:
+		move(map_position, orientation_dir)
+	else:
+		move(map_position, steps.pick_random())
+
 func move(map_position: Vector2i, direction: Vector2i) -> void:
 	if direction == Vector2i(0,0):
 		return

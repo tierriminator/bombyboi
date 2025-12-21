@@ -161,11 +161,9 @@ func attack_targets_without_bottle(targets: Array[Vector2i], map_position: Vecto
 			place_bomb(map_position)
 			return
 
-	if randf() < 0.5:
-		var closest = get_closest_tile(targets, map_position)
-		move(map_position, get_step_towards(closest, map_position))
-	else:
-		place_bomb(map_position)
+	# No target in range, move towards closest
+	var closest = get_closest_tile(targets, map_position)
+	move(map_position, get_step_towards(closest, map_position))
 
 func attack_targets_with_bottle(targets: Array[Vector2i], possible_steps: Array[Vector2i], map_position: Vector2i) -> void:
 	for target_tile in targets:
@@ -225,10 +223,7 @@ func get_visible_tiles() -> Array[Vector2i]:
 	
 func is_in_range(tile: Vector2i) -> bool:
 	var map_position = terrain.local_to_map(position)
-	var diff = map_position - tile
-	var absx = abs(diff.x)
-	var absy = abs(diff.y)
-	return max(absx, absy) <= bomb_range and min(absx, absy) == 0
+	return tile in Bomb.get_explosion_tiles(map, map_position, bomb_range)
 	
 func flee(possible_steps: Array[Vector2i]) -> void:
 	var map_position = terrain.local_to_map(position)

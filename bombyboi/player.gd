@@ -77,7 +77,7 @@ func _ready() -> void:
 		add_child(timer)
 		timer.one_shot = false
 		timer.timeout.connect(ai_action)
-		timer.wait_time = 0.5
+		timer.wait_time = Main.AI_SPEED
 		timer.start()
 
 func _physics_process(delta: float) -> void:

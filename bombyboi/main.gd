@@ -13,6 +13,8 @@ var result: Array
 const MAPGEN_WALLS = 15
 const MAPGEN_WALL_LENGTH = 10
 
+const AI_SPEED = 0.5
+
 var ENERGY_SPAWN_P = 0.3
 var PINK_ENERGY_P = 0.3
 var SPAWN_BOTTLE_P = 0.2

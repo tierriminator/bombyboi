@@ -26,7 +26,8 @@ var pink_energy_p = 0.5
 @onready var bombas := get_node("/root/Map/Bombas")
 @onready var player_layer := get_node("/root/Map/Players")
 
-@export var player_scene: PackedScene
+@export var human_player_scene: PackedScene
+@export var ai_player_scene: PackedScene
 @export var bomb_scene: PackedScene
 @export var bombe_in_flesche_scene: PackedScene
 @export var energy_scene: PackedScene
@@ -96,8 +97,8 @@ func place_players(players: int, ais: int) -> void:
 		set_area(pos - Vector2i(1, 0), Vector2i(3, 1), 1)
 		
 func create_player(player: int, character: int, pos: Vector2i, is_ai: bool) -> void:
-	var psc = player_scene.instantiate()
-	psc.is_ai = is_ai
+	var scene = ai_player_scene if is_ai else human_player_scene
+	var psc = scene.instantiate()
 	psc.player_id = player + 1
 	psc.get_node("Sprite2D").texture = faces[character]
 	psc.set_position(player_layer.map_to_local(pos))
@@ -134,7 +135,7 @@ func has_bomb(tile: Vector2i) -> bool:
 			return true
 	return false
 	
-func spawn_bomb(tile: Vector2i, player: Player) -> void:
+func spawn_bomb(tile: Vector2i, player: BasePlayer) -> void:
 	if has_bomb(tile):
 		return
 	var target_pos = terrain.map_to_local(tile)
@@ -145,7 +146,7 @@ func spawn_bomb(tile: Vector2i, player: Player) -> void:
 	bombas.add_child(bomb)
 	$sounds/place_bomb.play()
 	
-func throw_bomb(tile: Vector2i, player: Player) -> void:
+func throw_bomb(tile: Vector2i, player: BasePlayer) -> void:
 	var bomb: BombeInFlesche = bombe_in_flesche_scene.instantiate()
 	bombas.add_child(bomb)
 	bomb.player_id = player.player_id
@@ -209,7 +210,7 @@ func spawn_energy(tile: Vector2i) -> void:
 	energy.position = bombas.map_to_local(tile)
 	bombas.add_child(energy)
 	
-func find_player(tile: Vector2i) -> Player:
+func find_player(tile: Vector2i) -> BasePlayer:
 	for player in get_players():
 		if terrain.local_to_map(player.position) == tile:
 			return player
@@ -221,8 +222,8 @@ func player_exists(id: int) -> bool:
 			return true
 	return false
 	
-func get_players() -> Array[Player]:
-	var players: Array[Player] = []
+func get_players() -> Array[BasePlayer]:
+	var players: Array[BasePlayer] = []
 	players.assign(get_tree().get_nodes_in_group("players"))
 	return players.filter(func (p): return not p.is_dead)
 	

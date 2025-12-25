@@ -19,6 +19,9 @@ var ENERGY_SPAWN_P = 0.3
 var PINK_ENERGY_P = 0.3
 var SPAWN_BOTTLE_P = 0.2
 
+var AI_WAIT_AVG = 0.5
+var AI_WAIT_RANGE = 0.2
+
 var BOMBE_IN_FLESCHE_MOVE_FREQ = 0.2
 
 enum EnergyType { GREEN, PINK }
